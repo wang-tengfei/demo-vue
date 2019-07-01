@@ -1,0 +1,30 @@
+version: '3.3'
+
+services:
+  demo-vue:
+    image: demo:v1.0
+    ports:
+      - 8000:8080
+      - 5005:5005
+    container_name: demo-vue
+    volumes:
+      - ./web-variables.env:/web-variables.env
+    env_file:
+      - web-variables.env
+    extra_hosts:
+      - "mongo.tengfei.com:172.17.0.1"
+      - "jaeger-agent.nexusguard.asia:10.6.5.225"
+  demo-vue-2:
+    build: ./
+    image: demo:v2.0
+    ports:
+      - 8001:8080
+      - 5006:5005
+    container_name: demo-vue-2
+    volumes:
+      - ./web-variables.env:/web-variables.env
+    env_file:
+      - web-variables.env
+    extra_hosts:
+      - "mongo.tengfei.com:172.17.0.1"
+      - "jaeger-agent.nexusguard.asia:10.6.5.225"
