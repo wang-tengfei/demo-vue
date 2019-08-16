@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body {
+            margin: 0 0 50px 0;
+            padding: 0;
+        }
+        div{
+            border: 1px black solid;
+        }
+        img {
+            float: right;
+            margin: 0 0 1em 1em;
+            width: 50%;
+        }
+        .main{
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .left {
+            position: absolute; /*absolute 是相对于最近的元素定位的，如果最近的元素没有position 那么就是相对于body定位 */
+            width: 200px;
+            height: 400px;
+            top: 0;
+            left: 0;
+        }
+
+        .content {
+            margin-left: 200px;
+            width: 600px;
+            height: 400px;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 50px;
+            background-color: yellow;
+        }
+
+        .nav {
+            width: 100%;
+            height: 80px;
+            border: 1px blue solid;
+            float: left;
+        }
+
+        .main_content {
+            clear: left;
+            width: 100%;
+            position: relative;
+        }
+
+        .box {
+            display: inline-block;
+            width: 228px;
+            height: 250px;
+            margin: 1em;
+        }
+        .three-column {
+            padding: 1em;
+            -moz-column-count: 3;
+            -moz-column-gap: 1em;
+            -webkit-column-count: 3;
+            -webkit-column-gap: 1em;
+            column-count: 3;
+            column-gap: 1em;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+    <div class="nav">
+        我是导航
+    </div>
+    <div class="main_content">
+        <div class="left" style="display: inline-block">
+            我是左边栏
+        </div>
+
+        <div class="content" style="display: inline-block">
+            content
+            <img src="http://zh.learnlayout.com/images/ilta.png"/>
+            <p>Maecenas nisl est, ultrices nec congue eget, auctor vitae massa. Fusce luctus vestibulum augue ut aliquet. Mauris ante ligula, facilisis sed ornare eu, lobortis in odio. Praesent convallis urna a lacus interdum ut hendrerit risus congue. Nunc sagittis dictum nisi, sed ullamcorper ipsum dignissim ac. In at libero sed nunc venenatis imperdiet sed ornare turpis. Donec vitae dui eget tellus gravida venenatis. Integer fringilla congue eros non fermentum. Sed dapibus pulvinar nibh tempor porta. Cras ac leo purus. Mauris quis diam velit.</p>
+        </div>
+        <div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+        </div>
+    </div>
+
+</div>
+<!--固定一个元素到指定位置-->
+<div class="footer">
+    被固定起来了
+</div>
+</body>
+</html>

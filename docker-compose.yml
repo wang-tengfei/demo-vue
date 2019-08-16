@@ -23,8 +23,18 @@ services:
     container_name: demo-vue-2
     volumes:
       - ./web-variables.env:/web-variables.env
+      - ./startup.sh:/startup.sh
     env_file:
       - web-variables.env
     extra_hosts:
       - "mongo.tengfei.com:172.17.0.1"
       - "jaeger-agent.nexusguard.asia:10.6.5.225"
+    entrypoint:
+      - "/startup.sh"
+      - "-RUNTIME_ENV"
+      - "dev"
+      - "-SERVER_PORT"
+      - "8088"
+      - "-jaeger_host"
+      - "http://www.baidus.com"
+
