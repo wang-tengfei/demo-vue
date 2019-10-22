@@ -62,4 +62,10 @@ public class UserController {
     public Result login(@RequestParam("username")String userName, @RequestParam("password")String password) {
         return userService.login(userName, password);
     }
+
+    @ValidToken(request = false)
+    @RequestMapping(value = "/update-password/{user-id}", method = RequestMethod.PUT)
+    public Result updatePassword(@PathVariable("user-id")String userId, @RequestParam("password")String password) {
+        return userService.updatePassword(userId, password);
+    }
 }

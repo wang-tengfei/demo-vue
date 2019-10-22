@@ -24,4 +24,6 @@ public interface UserService {
     Result getUserById(String userId);
 
     Result login(String userName, String password);
+
+    Result updatePassword(String userId, String password);
 }

@@ -53,12 +53,6 @@
             <artifactId>opentracing-apache-httpclient</artifactId>
             <version>0.2.0</version>
         </dependency>
-        <!--仅支持restClient的调用-->
-        <dependency>
-            <groupId>io.opentracing.contrib</groupId>
-            <artifactId>opentracing-elasticsearch5-client</artifactId>
-            <version>0.1.1</version>
-        </dependency>
         <dependency>
             <groupId>io.opentracing.contrib</groupId>
             <artifactId>opentracing-mongo-driver</artifactId>

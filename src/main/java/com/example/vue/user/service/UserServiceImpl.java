@@ -118,4 +118,16 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = new UserEntity(user.getId(), userName, token, 7200L);
         return ResultUtil.success(userEntity);
     }
+
+    @Override
+    public Result updatePassword(String userId, String password) {
+        Optional<UserInfo> userInfoOptional = userInfoRepository.findById(userId);
+        if (userInfoOptional.isPresent()) {
+            UserInfo userInfo = userInfoOptional.get();
+            userInfo.setPassword(password);
+            userInfoRepository.save(userInfo);
+            return ResultUtil.success();
+        }
+        return ResultUtil.error(ResultEnum.NOT_FOUND);
+    }
 }
