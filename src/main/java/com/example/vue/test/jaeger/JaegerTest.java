@@ -30,14 +30,14 @@ public class JaegerTest {
     public static void main(String[] args) {
         JaegerTracer tracer = getJaegerTracer();
 
-        JaegerTracer.SpanBuilder test = tracer.buildSpan("test");
+        JaegerTracer.SpanBuilder test = tracer.buildSpan("readFileByByte");
         JaegerSpan span = test.start();
-        span.setTag("a", "this is test");
+        span.setTag("a", "this is readFileByByte");
 
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("test","666");
-        httpHeaders.add("uberctx-test","bg-test");
+        httpHeaders.add("readFileByByte","666");
+        httpHeaders.add("uberctx-readFileByByte","bg-readFileByByte");
         tracer.inject(span.context(), Format.Builtin.HTTP_HEADERS, new HttpHeadersCarrier(httpHeaders));
         span.finish();
 
@@ -52,7 +52,7 @@ public class JaegerTest {
 
         JaegerSpan span3 = tracer.buildSpan("span3").addReference(References.FOLLOWS_FROM, spanContext).start();
 //        JaegerSpan span3 = tracer.buildSpan("span3").addReference(References.CHILD_OF, span.context()).start();
-        span3.setTag("test", "this is span3");
+        span3.setTag("readFileByByte", "this is span3");
         span3.finish();
 
         tracer.close();

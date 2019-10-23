@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
-usage="Usage: $0 [-RUNTIME_ENV] (prod|staging|test|integration) (default \"prod\") [-SEVER_PORT] <port> (default \"8080\") [-JAR_FILE] <path-to-jarfile>  (default \"/app.jar\")"
+usage="Usage: $0 [-RUNTIME_ENV] (prod|staging|readFileByByte|integration) (default \"prod\") [-SEVER_PORT] <port> (default \"8080\") [-JAR_FILE] <path-to-jarfile>  (default \"/app.jar\")"
 echo "all param is ${*}"
 while [[ $# -gt 0 ]]
 do
