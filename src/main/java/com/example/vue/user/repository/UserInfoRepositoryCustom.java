@@ -15,5 +15,12 @@ import java.util.Map;
  */
 public interface UserInfoRepositoryCustom {
 
-    Page<UserInfo> getAllUsersWithPage(Pageable pageable, String[] username, Integer[] status);
+    /**
+     * get users with page
+     * @param pageable
+     * @param username
+     * @param status
+     * @return
+     */
+    Page<UserInfo> getAllUsersWithPage(Pageable pageable, String username, Integer[] status, Long startTime, Long endTime);
 }

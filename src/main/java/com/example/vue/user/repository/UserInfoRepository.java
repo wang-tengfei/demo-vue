@@ -17,15 +17,21 @@ import java.util.Optional;
  */
 public interface UserInfoRepository extends MongoRepository<UserInfo, String>, UserInfoRepositoryCustom {
 
-    @Query(value = "{status: 1}", fields = "{password: 0}")
+    /**
+     * get all users
+     * @return
+     */
+    @Query(value = "{status: {$ne: 0}}", fields = "{password: 0}")
     List<UserInfo> getAllUsers();
 
-
-//    @Query(value = "{status: ?1, user_name : ?0}", fields = "{password: 0}")
-//    List<UserInfo> getAllUsersWithPage(Pageable pageable, String username, Integer status);
-
-    @CountQuery(value = "{status: {'$in' : ?1}, user_name : {'$in' : ?0}}")
-    Long getUserCount(String[] username, Integer[] status);
+    /**
+     * get user count
+     * @param username
+     * @param status
+     * @return
+     */
+    @CountQuery(value = "{ user_name : ?0}, status: {'$in' : ?1}")
+    Long getUserCount(String username, Integer[] status);
 
     /**
      * login
@@ -33,5 +39,6 @@ public interface UserInfoRepository extends MongoRepository<UserInfo, String>, U
      * @param password
      * @return
      */
+    @Query(value = "{status: {$ne: 0}, user_name: ?0, password: ?1}")
     Optional<UserInfo> getUserInfoByUserNameAndPassword(String userName, String password);
 }

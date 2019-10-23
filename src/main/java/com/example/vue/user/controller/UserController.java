@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
  * @modified by:
  */
 @RestController
-@ValidToken
 @RequestMapping("/vue")
+@Validated
 public class UserController {
 
     @Autowired
@@ -28,7 +28,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/user/{user_id}", method = RequestMethod.PUT)
-    public Result editUser(@PathVariable("user_id")String userId, @Validated @RequestBody UserInfo userInfo) {
+    public Result editUser(@PathVariable("user_id")String userId, @Validated(UserInfo.UpdateUser.class) @RequestBody UserInfo userInfo) {
         userInfo.setId(userId);
         return userService.editUser(userInfo);
     }
@@ -52,9 +52,11 @@ public class UserController {
     @RequestMapping(value = "/users-page", method = RequestMethod.GET)
     public Result getUsersWithPage(@RequestParam("page_index") Integer pageNum,
                                    @RequestParam("page_size") Integer pageSize,
-                                   @RequestParam(value = "username", required = false) String[] username,
+                                   @RequestParam(value = "username", required = false) String username,
+                                   @RequestParam(value = "startTime", required = false) Long startTime,
+                                   @RequestParam(value = "endTime", required = false) Long endTime,
                                    @RequestParam(value = "status", required = false) Integer[] status) {
-        return userService.getUsersWithPage(pageNum, pageSize, username, status);
+        return userService.getUsersWithPage(pageNum, pageSize, username, status, startTime, endTime);
     }
 
     @ValidToken(request = false)
@@ -64,7 +66,14 @@ public class UserController {
     }
 
     @ValidToken(request = false)
-    @RequestMapping(value = "/update-password/{user-id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/login-out/{user-id}", method = RequestMethod.POST)
+    public Result loginOut(@PathVariable("user-id")String userId) {
+        return userService.loginOut(userId);
+    }
+
+
+    @ValidToken(request = false)
+    @RequestMapping(value = "/user/password/{user-id}", method = RequestMethod.POST)
     public Result updatePassword(@PathVariable("user-id")String userId, @RequestParam("password")String password) {
         return userService.updatePassword(userId, password);
     }

@@ -4,6 +4,7 @@ import com.example.vue.common.ResultUtil;
 import com.example.vue.common.constant.Page;
 import com.example.vue.common.constant.Result;
 import com.example.vue.common.constant.ResultEnum;
+import com.example.vue.common.constant.VueConstant;
 import com.example.vue.oauth.repository.UserEntity;
 import com.example.vue.oauth.service.OauthService;
 import com.example.vue.user.modle.UserInfo;
@@ -11,12 +12,16 @@ import com.example.vue.user.repository.UserInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author: Tengfei Wang
@@ -33,12 +38,19 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private OauthService oauthService;
 
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+
 
     @Override
     public Result addUser(UserInfo userInfo) {
+        Long userCount = userInfoRepository.getUserCount(userInfo.getUserName(), VueConstant.EFFECTIVE_STATUS);
+        if (userCount != null && userCount > 0) {
+            return ResultUtil.error(ResultEnum.USERNAME_EXIST);
+        }
         userInfo.setCreateTime(System.currentTimeMillis());
         userInfo.setId(UUID.randomUUID().toString());
-        userInfo.setStatus(1);
+        userInfo.setStatus(VueConstant.STATUS_NORMAL);
         UserInfo save = userInfoRepository.save(userInfo);
         return ResultUtil.success(save);
     }
@@ -56,23 +68,24 @@ public class UserServiceImpl implements UserService {
             return ResultUtil.error(ResultEnum.PARAM_ERROR);
         }
         UserInfo info = userInfoDb.get();
-        info.setUserName(userInfo.getUserName());
+        info.setNickName(userInfo.getNickName());
         info.setAge(userInfo.getAge());
         info.setPhoneNumber(userInfo.getPhoneNumber());
         info.setEmail(userInfo.getEmail());
+        info.setAddress(userInfo.getAddress());
         info.setUpdateTime(System.currentTimeMillis());
         UserInfo save = userInfoRepository.save(info);
         return ResultUtil.success(save);
     }
 
     @Override
-    public Result getUsersWithPage(Integer pageNum, Integer pageSize, String[] username, Integer[] status) {
+    public Result getUsersWithPage(Integer pageNum, Integer pageSize, String username, Integer[] status, Long startTime, Long endTime) {
         if (pageNum <= 1) {
             pageNum = 1;
         }
         Sort sort = new Sort(Sort.Direction.DESC, "c_time");
         PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize, sort);
-        Page page = userInfoRepository.getAllUsersWithPage(pageRequest, username, status);
+        Page page = userInfoRepository.getAllUsersWithPage(pageRequest, username, status, startTime, endTime);
 
         page.setPageIndex(pageNum);
         page.setPageSize(pageSize);
@@ -82,9 +95,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Result deleteUserById(String userId) {
         try {
-            Optional<UserInfo> userInfo = userInfoRepository.findById(userId);
-            if (userInfo.isPresent()) {
-                userInfoRepository.deleteById(userId);
+            Optional<UserInfo> userInfoOptional = userInfoRepository.findById(userId);
+            if (userInfoOptional.isPresent()) {
+                UserInfo userInfo = userInfoOptional.get();
+                userInfo.setStatus(VueConstant.STATUS_DELETE);
+                userInfoRepository.save(userInfo);
                 return ResultUtil.success();
             }
             return ResultUtil.error(ResultEnum.NOT_FOUND);
@@ -111,12 +126,27 @@ public class UserServiceImpl implements UserService {
             return ResultUtil.error(ResultEnum.PASSWORD_WRONG);
         }
         UserInfo user = userInfo.get();
+        if (user.getStatus().equals(VueConstant.STATUS_DISABLE)) {
+            return ResultUtil.error(ResultEnum.DISABLE_USER);
+        }
         String token = oauthService.getToken(user);
         if (StringUtils.isEmpty(token)) {
             return ResultUtil.error(ResultEnum.SERVER_ERROR);
         }
         UserEntity userEntity = new UserEntity(user.getId(), userName, token, 7200L);
+        ValueOperations<String, Object> operations = redisTemplate.opsForValue();
+        operations.set(VueConstant.REIDS_LOGIN_USER_PREFIX + userEntity.getUserId(), userEntity,2, TimeUnit.HOURS);
         return ResultUtil.success(userEntity);
+    }
+
+    @Override
+    public Result loginOut(String userId) {
+        Optional<UserInfo> userInfoOptional = userInfoRepository.findById(userId);
+        if (!userInfoOptional.isPresent()) {
+            return ResultUtil.error(ResultEnum.NOT_FOUND);
+        }
+        redisTemplate.delete(VueConstant.REIDS_LOGIN_USER_PREFIX + userId);
+        return ResultUtil.success();
     }
 
     @Override

@@ -17,13 +17,15 @@ public interface UserService {
 
     Result editUser(UserInfo userInfo);
 
-    Result getUsersWithPage(Integer pageNum, Integer pageSize, String[] username, Integer[] status);
+    Result getUsersWithPage(Integer pageNum, Integer pageSize, String username, Integer[] status, Long startTime, Long endTime);
 
     Result deleteUserById(String userId);
 
     Result getUserById(String userId);
 
     Result login(String userName, String password);
+
+    Result loginOut(String userId);
 
     Result updatePassword(String userId, String password);
 }

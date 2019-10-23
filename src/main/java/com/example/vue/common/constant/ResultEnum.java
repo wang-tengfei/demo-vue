@@ -9,21 +9,25 @@ package com.example.vue.common.constant;
 public enum  ResultEnum {
 
     /** Unknown Exception */
-    UNKNOWN_EXCEPTION(-1, "Unknown Exception"),
+    UNKNOWN_EXCEPTION(-1, "未知异常"),
 
     SERVER_ERROR(500, "Server Error"),
     /** 参数错误 */
-    PARAM_ERROR(100001, "Parameter Error"),
+    PARAM_ERROR(100001, "参数错误"),
 
-    NOT_FOUND(100002, "Not Found"),
+    NOT_FOUND(100002, "未查找到您要的结果"),
 
-    PASSWORD_WRONG(100003, "Username or password is wrong"),
+    PASSWORD_WRONG(100003, "用户名或者密码错误"),
 
-    TOKEN_INVALID(100004, "Token invalid"),
+    TOKEN_INVALID(100004, "Token 无效"),
 
-    TOKEN_EXPIRED(100004, "Token expired"),
+    TOKEN_EXPIRED(100004, "Token 已失效"),
 
-    TOKEN_IS_EMPTY(100005, "Token is needed"),
+    TOKEN_IS_EMPTY(100005, "缺失 token"),
+
+    USERNAME_EXIST(100006, "用户名已经存在"),
+
+    DISABLE_USER(100007, "您的账户被冻结，暂时无法登录，请联系管理员"),
 
 
 
