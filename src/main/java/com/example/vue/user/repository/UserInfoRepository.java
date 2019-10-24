@@ -25,6 +25,13 @@ public interface UserInfoRepository extends MongoRepository<UserInfo, String>, U
     List<UserInfo> getAllUsers();
 
     /**
+     * get all users
+     * @return
+     */
+    @Query(value = "{status: {$ne: 0}}", fields = "{user_name: 1}")
+    List<UserInfo> getAllUserName();
+
+    /**
      * get user count
      * @param username
      * @param status

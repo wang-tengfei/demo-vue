@@ -28,4 +28,10 @@ public interface UserService {
     Result loginOut(String userId);
 
     Result updatePassword(String userId, String password);
+
+    Result disableUser(String userId);
+
+    Result enableUser(String userId);
+
+    Result getAllUserName();
 }

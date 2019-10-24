@@ -18,9 +18,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -159,5 +157,41 @@ public class UserServiceImpl implements UserService {
             return ResultUtil.success();
         }
         return ResultUtil.error(ResultEnum.NOT_FOUND);
+    }
+
+    @Override
+    public Result disableUser(String userId) {
+        Optional<UserInfo> userInfoOptional = userInfoRepository.findById(userId);
+        if (!userInfoOptional.isPresent()) {
+            return ResultUtil.error(ResultEnum.NOT_FOUND);
+        }
+        UserInfo userInfo = userInfoOptional.get();
+        userInfo.setStatus(VueConstant.STATUS_DISABLE);
+        userInfoRepository.save(userInfo);
+        return ResultUtil.success();
+    }
+
+    @Override
+    public Result enableUser(String userId) {
+        Optional<UserInfo> userInfoOptional = userInfoRepository.findById(userId);
+        if (!userInfoOptional.isPresent()) {
+            return ResultUtil.error(ResultEnum.NOT_FOUND);
+        }
+        UserInfo userInfo = userInfoOptional.get();
+        userInfo.setStatus(VueConstant.STATUS_NORMAL);
+        userInfoRepository.save(userInfo);
+        return ResultUtil.success();
+    }
+
+    @Override
+    public Result getAllUserName() {
+        List<UserInfo> userNames = userInfoRepository.getAllUserName();
+        ArrayList<Map<String, String>> list = new ArrayList<>();
+        userNames.forEach(w-> {
+            HashMap<String, String> map = new HashMap<>(userNames.size());
+            map.put("value", w.getUserName());
+            list.add(map);
+        });
+        return ResultUtil.success(list);
     }
 }

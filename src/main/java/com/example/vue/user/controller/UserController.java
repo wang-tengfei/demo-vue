@@ -39,8 +39,13 @@ public class UserController {
     }
 
     @RequestMapping(value = "/user/{user_id}", method = RequestMethod.GET)
-    public Result editUser(@PathVariable("user_id")String userId) {
+    public Result getUser(@PathVariable("user_id")String userId) {
         return userService.getUserById(userId);
+    }
+
+    @RequestMapping(value = "/user/username", method = RequestMethod.GET)
+    public Result getAllUserName() {
+        return userService.getAllUserName();
     }
 
     @ValidToken
@@ -76,5 +81,17 @@ public class UserController {
     @RequestMapping(value = "/user/password/{user-id}", method = RequestMethod.POST)
     public Result updatePassword(@PathVariable("user-id")String userId, @RequestParam("password")String password) {
         return userService.updatePassword(userId, password);
+    }
+
+    @ValidToken(request = false)
+    @RequestMapping(value = "/user/disable/{user-id}", method = RequestMethod.POST)
+    public Result disableUser(@PathVariable("user-id")String userId) {
+        return userService.disableUser(userId);
+    }
+
+    @ValidToken(request = false)
+    @RequestMapping(value = "/user/enable/{user-id}", method = RequestMethod.POST)
+    public Result enableUser(@PathVariable("user-id")String userId) {
+        return userService.enableUser(userId);
     }
 }
