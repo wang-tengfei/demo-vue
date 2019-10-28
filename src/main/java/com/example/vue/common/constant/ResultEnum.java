@@ -35,6 +35,8 @@ public enum  ResultEnum {
 
     REPEATE_NAME(1000010, "名称重复"),
 
+    REPEAT_ROLE_NAME(100011, "角色名称不能重复"),
+
 
 
     /** 操作成功返回数据 */

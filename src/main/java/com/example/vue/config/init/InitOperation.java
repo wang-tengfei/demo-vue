@@ -1,7 +1,7 @@
 package com.example.vue.config.init;
 
-import com.example.vue.menu.domain.Menu;
-import com.example.vue.menu.service.MenuService;
+import com.example.vue.biz.menu.domain.Menu;
+import com.example.vue.biz.menu.service.MenuService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

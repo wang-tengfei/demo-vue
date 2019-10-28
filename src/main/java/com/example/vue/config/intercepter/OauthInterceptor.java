@@ -1,7 +1,7 @@
 package com.example.vue.config.intercepter;
 
-import com.example.vue.config.annotation.ValidToken;
-import com.example.vue.oauth.service.OauthService;
+import com.example.vue.common.annotation.ValidToken;
+import com.example.vue.biz.oauth.service.OauthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
