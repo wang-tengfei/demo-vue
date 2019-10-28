@@ -1,8 +1,8 @@
-package com.example.vue.biz.menu.contoller;
+package com.example.vue.biz.permission.contoller;
 
 import com.example.vue.common.constant.Result;
-import com.example.vue.biz.menu.domain.Menu;
-import com.example.vue.biz.menu.service.MenuService;
+import com.example.vue.biz.permission.domain.Permission;
+import com.example.vue.biz.permission.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,12 +22,12 @@ public class MenuController {
     private MenuService menuService;
 
     @RequestMapping(value = "/menu", method = RequestMethod.POST)
-    public Result addMenu(@Validated(value = Menu.AddValid.class) @RequestBody Menu menu) {
+    public Result addMenu(@Validated(value = Permission.AddValid.class) @RequestBody Permission menu) {
         return menuService.addMenu(menu);
     }
 
     @RequestMapping(value = "/menu/{menu-id}", method = RequestMethod.PUT)
-    public Result updateMenu(@Validated(value = Menu.EditValid.class) @PathVariable("menu-id") String menuId, @RequestBody Menu menu) {
+    public Result updateMenu(@Validated(value = Permission.EditValid.class) @PathVariable("menu-id") String menuId, @RequestBody Permission menu) {
         menu.setId(menuId);
         return menuService.updateMenu(menu);
     }
@@ -42,8 +42,8 @@ public class MenuController {
         return menuService.getMenuById(menuId);
     }
 
-    @RequestMapping(value = "/menu/parent/{parent-id}", method = RequestMethod.GET)
-    public Result getMenuByParentId(@PathVariable("parent-id") String parentId) {
+    @RequestMapping(value = "/menu/parent", method = RequestMethod.GET)
+    public Result getMenuByParentId(@RequestParam(value = "parentId", required = false) String parentId) {
         return menuService.getMenuByParentId(parentId);
     }
 }

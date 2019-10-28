@@ -1,4 +1,4 @@
-package com.example.vue.biz.user.modle;
+package com.example.vue.biz.log.domain;
 
 import lombok.Data;
 import lombok.ToString;
@@ -11,8 +11,8 @@ import org.springframework.data.mongodb.core.mapping.Field;
  */
 @Data
 @ToString
-@Document(value = "log_login")
-public class LoginLog {
+@Document(value = "v_log")
+public class OperationLog {
 
     @Id
     private String id;
@@ -23,8 +23,11 @@ public class LoginLog {
     @Field("user_name")
     private String userName;
 
-    @Field("action")
-    private String action;
+    @Field("type")
+    private Integer type;
+
+    @Field("desc")
+    private String desc;
 
     @Field("c_time")
     private Long createTime;

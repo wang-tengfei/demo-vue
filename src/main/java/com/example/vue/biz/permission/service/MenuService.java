@@ -1,7 +1,7 @@
-package com.example.vue.biz.menu.service;
+package com.example.vue.biz.permission.service;
 
 import com.example.vue.common.constant.Result;
-import com.example.vue.biz.menu.domain.Menu;
+import com.example.vue.biz.permission.domain.Permission;
 
 /**
  * @author: Tengfei Wang
@@ -11,9 +11,9 @@ import com.example.vue.biz.menu.domain.Menu;
  */
 public interface MenuService {
 
-    Result addMenu(Menu menu);
+    Result addMenu(Permission menu);
 
-    Result updateMenu(Menu menu);
+    Result updateMenu(Permission menu);
 
     Result deleteMenu(String id, boolean deleteChild);
 

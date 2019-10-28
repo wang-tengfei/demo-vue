@@ -1,7 +1,7 @@
 package com.example.vue.config.init;
 
-import com.example.vue.biz.menu.domain.Menu;
-import com.example.vue.biz.menu.service.MenuService;
+import com.example.vue.biz.permission.domain.Permission;
+import com.example.vue.biz.permission.service.MenuService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -28,12 +28,12 @@ public class InitOperation implements CommandLineRunner {
     }
 
     private void initMenu() {
-        ArrayList<Menu> menus = new ArrayList<>();
-        Menu menu1 = new Menu("用户管理", "", "用户信息管理", null);
+        ArrayList<Permission> menus = new ArrayList<>();
+        Permission menu1 = new Permission("用户管理", "", "用户信息管理", null);
         menus.add(menu1);
-        Menu menu2 = new Menu("角色管理", "", "角色信息管理", null);
+        Permission menu2 = new Permission("角色管理", "", "角色信息管理", null);
         menus.add(menu2);
-        Menu menu3 = new Menu("权限管理", "", "权限信息管理", null);
+        Permission menu3 = new Permission("权限管理", "", "权限信息管理", null);
         menus.add(menu3);
         menus.forEach(w -> menuService.addMenu(w));
     }

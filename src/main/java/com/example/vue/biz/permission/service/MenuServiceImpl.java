@@ -1,11 +1,11 @@
-package com.example.vue.biz.menu.service;
+package com.example.vue.biz.permission.service;
 
 import com.example.vue.common.ResultUtil;
 import com.example.vue.common.constant.Result;
 import com.example.vue.common.constant.ResultEnum;
 import com.example.vue.common.constant.VueConstant;
-import com.example.vue.biz.menu.domain.Menu;
-import com.example.vue.biz.menu.repository.MenuRepository;
+import com.example.vue.biz.permission.domain.Permission;
+import com.example.vue.biz.permission.repository.MenuRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,69 +28,69 @@ public class MenuServiceImpl implements MenuService {
     private MenuRepository menuRepository;
 
     @Override
-    public Result addMenu(Menu menu) {
+    public Result addMenu(Permission menu) {
         String parentId = menu.getParentId();
         if (!StringUtils.isEmpty(parentId)) {
-            Optional<Menu> menuOptional = menuRepository.findById(parentId);
+            Optional<Permission> menuOptional = menuRepository.findById(parentId);
             if (!menuOptional.isPresent()) {
                 log.error("menu parent id {} is not exist", parentId);
                 return ResultUtil.error(ResultEnum.INVALID_PARENT_ID);
             }
             menu.setParentId(parentId);
         }
-        List<Menu> menuList = menuRepository.findByMenuName(menu.getMenuName());
+        List<Permission> menuList = menuRepository.findByMenuName(menu.getPermissionName());
         if (menuList.size() > 0) {
             return ResultUtil.error(ResultEnum.REPEATE_NAME);
         }
         menu.setId(UUID.randomUUID().toString());
         menu.setStatus(VueConstant.STATUS_NORMAL);
         menu.setCreateTime(System.currentTimeMillis());
-        Menu save = menuRepository.save(menu);
+        Permission save = menuRepository.save(menu);
         return ResultUtil.success(save);
     }
 
     @Override
-    public Result updateMenu(Menu menu) {
+    public Result updateMenu(Permission menu) {
         String id = menu.getId();
-        Optional<Menu> menuOptional = menuRepository.findById(id);
+        Optional<Permission> menuOptional = menuRepository.findById(id);
         if (!menuOptional.isPresent()) {
             log.error("menu id {} is not exist", id);
             return ResultUtil.error(ResultEnum.INVALID_ID);
         }
 
-        Menu menuDb = menuOptional.get();
-
-        List<Menu> menuList = menuRepository.findByMenuName(menu.getMenuName());
+        Permission menuDb = menuOptional.get();
+        List<Permission> menuList = menuRepository.findByMenuName(menu.getPermissionName());
         if (menuList.size() > 0 && !menuList.get(0).getId().equals(menuDb.getId())) {
             return ResultUtil.error(ResultEnum.REPEATE_NAME);
         }
 
         String parentId = menu.getParentId();
         if (!StringUtils.isEmpty(parentId)) {
-            Optional<Menu> parMenuOptional = menuRepository.findById(parentId);
+            Optional<Permission> parMenuOptional = menuRepository.findById(parentId);
             if (!parMenuOptional.isPresent()) {
                 log.error("menu parent id {} is not exist", parentId);
                 return ResultUtil.error(ResultEnum.INVALID_PARENT_ID);
             }
             menuDb.setParentId(parentId);
         }
-        menuDb.setMenuName(menu.getMenuName());
+        menuDb.setPath(menu.getPath());
+        menuDb.setPermissionName(menu.getPermissionName());
         menuDb.setDescription(menu.getDescription());
         menuDb.setUpdateTime(System.currentTimeMillis());
-        Menu save = menuRepository.save(menuDb);
+        Permission save = menuRepository.save(menuDb);
         return ResultUtil.success(save);
     }
 
     @Override
     public Result deleteMenu(String id, boolean deleteChild) {
-        Optional<Menu> menuOptional = menuRepository.findById(id);
+        Optional<Permission> menuOptional = menuRepository.findById(id);
         if (!menuOptional.isPresent()) {
             log.error("menu id {} is not exist", id);
             return ResultUtil.error(ResultEnum.NOT_FOUND);
         }
-        Menu menu = menuOptional.get();
+        Permission menu = menuOptional.get();
         if (!StringUtils.isEmpty(menu.getParentId())) {
-            List<Menu> menuList = menuRepository.findByParentId(menu.getParentId());
+            List<Permission> menuList = menuRepository.findByParentId(menu.getParentId());
             if (deleteChild && menuList.size() > 0) {
                 menuList.forEach(w -> w.setStatus(VueConstant.STATUS_DELETE));
                 menuRepository.saveAll(menuList);
@@ -103,7 +103,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public Result getMenuById(String id) {
-        Optional<Menu> menuOptional = menuRepository.findById(id);
+        Optional<Permission> menuOptional = menuRepository.findById(id);
         if (!menuOptional.isPresent()) {
             log.error("menu id {} is not exist", id);
             return ResultUtil.error(ResultEnum.INVALID_ID);
@@ -118,18 +118,18 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public Result getMenuByParentId(String parentId) {
-        List<Menu> menuList;
+        List<Permission> menuList;
         if (parentId == null) {
             menuList = menuRepository.findAll();
         } else {
             menuList = menuRepository.findByParentId(parentId);
         }
-        List<Menu> parentMenu = menuList.stream().filter(w -> w.getParentId() != null).collect(Collectors.toList());
+        List<Permission> parentMenu = menuList.stream().filter(w -> w.getParentId() != null).collect(Collectors.toList());
         ArrayList<Map<String, Object>> treeList = new ArrayList<>();
-        for (Menu menu : parentMenu) {
+        for (Permission menu : parentMenu) {
             HashMap<String, Object> map = new HashMap<>(parentMenu.size());
             map.put("id", menu.getId());
-            map.put("label", menu.getMenuName());
+            map.put("label", menu.getPermissionName());
             treeList.add(map);
         }
         return ResultUtil.success(treeList);

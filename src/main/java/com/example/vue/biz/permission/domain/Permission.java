@@ -1,4 +1,4 @@
-package com.example.vue.biz.menu.domain;
+package com.example.vue.biz.permission.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
@@ -21,7 +21,7 @@ import javax.validation.constraints.NotEmpty;
 @ToString
 @Document("v_menu")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Menu {
+public class Permission {
 
     @Id
     @Indexed
@@ -30,7 +30,7 @@ public class Menu {
     @Field("menu_name")
     @NotEmpty(groups = {AddValid.class, EditValid.class})
     @NotBlank(groups = {AddValid.class, EditValid.class})
-    private String menuName;
+    private String permissionName;
 
     @Field("path")
     private String path;
@@ -56,11 +56,11 @@ public class Menu {
     public interface EditValid {
     }
 
-    public Menu() {
+    public Permission() {
     }
 
-    public Menu(String menuName, String path, String description, String parentId) {
-        this.menuName = menuName;
+    public Permission(String permissionName, String path, String description, String parentId) {
+        this.permissionName = permissionName;
         this.path = path;
         this.description = description;
         this.parentId = parentId;

@@ -1,6 +1,6 @@
-package com.example.vue.biz.menu.repository;
+package com.example.vue.biz.permission.repository;
 
-import com.example.vue.biz.menu.domain.Menu;
+import com.example.vue.biz.permission.domain.Permission;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
@@ -13,19 +13,19 @@ import java.util.Optional;
  * @date: Created in 14:10 2019-10-28
  * @modified by:
  */
-public interface MenuRepository extends MongoRepository<Menu, String> {
+public interface MenuRepository extends MongoRepository<Permission, String> {
 
     @Override
     @Query(value = "{status: {$ne: 0}, _id: ?0}")
-    Optional<Menu> findById(String id);
+    Optional<Permission> findById(String id);
 
     @Query(value = "{status: {$ne: 0}, menu_name: ?0}")
-    List<Menu> findByMenuName(String name);
+    List<Permission> findByMenuName(String name);
 
     @Override
     @Query("{status: {$ne: 0}}")
-    List<Menu> findAll();
+    List<Permission> findAll();
 
     @Query(value = "{status: {$ne: 0}, parent_id: ?0}")
-    List<Menu> findByParentId(String parentId);
+    List<Permission> findByParentId(String parentId);
 }

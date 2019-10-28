@@ -1,5 +1,6 @@
 package com.example.vue.biz.user.service;
 
+import com.example.vue.biz.log.service.OperationLogService;
 import com.example.vue.common.ResultUtil;
 import com.example.vue.common.constant.Page;
 import com.example.vue.common.constant.Result;
@@ -28,6 +29,9 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private OperationLogService logService;
 
     @Autowired
     private UserInfoRepository userInfoRepository;
@@ -97,6 +101,7 @@ public class UserServiceImpl implements UserService {
                 UserInfo userInfo = userInfoOptional.get();
                 userInfo.setStatus(VueConstant.STATUS_DELETE);
                 userInfoRepository.save(userInfo);
+                logService.addLog(userId, userInfo.getUserName(), VueConstant.LOG_TYPE_LOGIN_OUT, "");
                 return ResultUtil.success();
             }
             return ResultUtil.error(ResultEnum.NOT_FOUND);
@@ -132,13 +137,15 @@ public class UserServiceImpl implements UserService {
         }
         UserEntity userEntity = new UserEntity(user.getId(), userName, token, 7200L);
         ValueOperations<String, Object> operations = redisTemplate.opsForValue();
-        operations.set(VueConstant.REIDS_LOGIN_USER_PREFIX + userEntity.getUserId(), userEntity,2, TimeUnit.HOURS);
+        operations.set(VueConstant.REDIS_LOGIN_USER_PREFIX + userEntity.getUserId(), userEntity,2, TimeUnit.HOURS);
 
         //设置登录信息
         user.setLoginTime(System.currentTimeMillis());
         user.setLastLoginTime(user.getLoginTime());
         user.setLoginCount(user.getLoginTime() + 1);
         userInfoRepository.save(user);
+
+        logService.addLog(user.getId(), user.getUserName(), VueConstant.LOG_TYPE_LOGIN, "");
 
         return ResultUtil.success(userEntity);
     }
@@ -149,7 +156,9 @@ public class UserServiceImpl implements UserService {
         if (!userInfoOptional.isPresent()) {
             return ResultUtil.error(ResultEnum.NOT_FOUND);
         }
-        redisTemplate.delete(VueConstant.REIDS_LOGIN_USER_PREFIX + userId);
+        redisTemplate.delete(VueConstant.REDIS_LOGIN_USER_PREFIX + userId);
+
+        logService.addLog(userId, userInfoOptional.get().getUserName(), VueConstant.LOG_TYPE_LOGIN_OUT, "");
         return ResultUtil.success();
     }
 
@@ -174,6 +183,7 @@ public class UserServiceImpl implements UserService {
         UserInfo userInfo = userInfoOptional.get();
         userInfo.setStatus(VueConstant.STATUS_DISABLE);
         userInfoRepository.save(userInfo);
+        logService.addLog(userId, userInfoOptional.get().getUserName(), VueConstant.LOG_TYPE_DISABLE_USER, "");
         return ResultUtil.success();
     }
 
@@ -186,6 +196,7 @@ public class UserServiceImpl implements UserService {
         UserInfo userInfo = userInfoOptional.get();
         userInfo.setStatus(VueConstant.STATUS_NORMAL);
         userInfoRepository.save(userInfo);
+        logService.addLog(userId, userInfoOptional.get().getUserName(), VueConstant.LOG_TYPE_ENABLE_USER, "");
         return ResultUtil.success();
     }
 

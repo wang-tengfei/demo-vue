@@ -18,5 +18,19 @@ public class VueConstant {
 
     public static final Integer[] EFFECTIVE_STATUS = {STATUS_NORMAL, STATUS_DISABLE};
 
-    public static final String REIDS_LOGIN_USER_PREFIX = "login-user-";
+    public static final String REDIS_LOGIN_USER_PREFIX = "login-user-";
+
+    public static final Integer LOG_TYPE_LOGIN = 1;
+
+    public static final Integer LOG_TYPE_LOGIN_OUT = 2;
+
+    public static final Integer LOG_TYPE_ADD_USER = 3;
+
+    public static final Integer LOG_TYPE_UPDATE_USER = 4;
+
+    public static final Integer LOG_TYPE_DELETE_USER = 5;
+
+    public static final Integer LOG_TYPE_DISABLE_USER = 6;
+
+    public static final Integer LOG_TYPE_ENABLE_USER = 7;
 }
