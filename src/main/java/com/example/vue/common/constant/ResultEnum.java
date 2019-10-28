@@ -29,6 +29,12 @@ public enum  ResultEnum {
 
     DISABLE_USER(100007, "您的账户被冻结，暂时无法登录，请联系管理员"),
 
+    INVALID_ID(100008, "ID 无效"),
+
+    INVALID_PARENT_ID(100009, "父 ID 无效"),
+
+    REPEATE_NAME(1000010, "名称重复"),
+
 
 
     /** 操作成功返回数据 */
