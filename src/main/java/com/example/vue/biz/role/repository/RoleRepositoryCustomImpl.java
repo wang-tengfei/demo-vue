@@ -30,7 +30,7 @@ public class RoleRepositoryCustomImpl implements RoleRepositoryCustom {
         Query query = new Query();
         if (!StringUtils.isEmpty(roleName)) {
             Pattern pattern = Pattern.compile(String.format("^.*%s.*$", roleName), Pattern.CASE_INSENSITIVE);
-            query.addCriteria(Criteria.where("'role_name").regex(pattern));
+            query.addCriteria(Criteria.where("role_name").regex(pattern));
         }
         if (startTime != null && endTime != null) {
             query.addCriteria(Criteria.where("c_time").gte(startTime).lte(endTime));

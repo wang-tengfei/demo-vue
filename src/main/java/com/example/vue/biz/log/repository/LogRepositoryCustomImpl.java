@@ -31,7 +31,7 @@ public class LogRepositoryCustomImpl implements LogRepositoryCustom {
         Query query = new Query();
         if (!StringUtils.isEmpty(userName)) {
             Pattern pattern = Pattern.compile(String.format("^.*%s.*$", userName), Pattern.CASE_INSENSITIVE);
-            query.addCriteria(Criteria.where("'user_name").regex(pattern));
+            query.addCriteria(Criteria.where("user_name").regex(pattern));
         }
         if (type != null) {
             query.addCriteria(Criteria.where("type").is(type));

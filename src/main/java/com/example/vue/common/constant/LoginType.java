@@ -59,10 +59,11 @@ public enum LoginType {
     }
 
     public static List getAll() {
-        List<Map<Integer, String>> list = new ArrayList<>();
+        List<Map<String, Object>> list = new ArrayList<>();
         for (LoginType type : LoginType.values()) {
-            HashMap<Integer, String> map = new HashMap<>();
-            map.put(type.type, type.typeName);
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("type", type.type);
+            map.put("typeName", type.typeName);
             list.add(map);
         }
         return list;
