@@ -50,4 +50,6 @@ public interface RoleService {
      * @return
      */
     Result assignRoleToUser(String userId, Long roleId);
+
+    Result getRoleWithPage(Integer pageNum, Integer pageSize, String username, Long startTime, Long endTime);
 }

@@ -1,6 +1,7 @@
 package com.example.vue.biz.role.service;
 
 import com.example.vue.common.ResultUtil;
+import com.example.vue.common.constant.Page;
 import com.example.vue.common.constant.Result;
 import com.example.vue.common.constant.ResultEnum;
 import com.example.vue.common.constant.VueConstant;
@@ -10,6 +11,8 @@ import com.example.vue.biz.user.modle.UserInfo;
 import com.example.vue.biz.user.repository.UserInfoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -93,5 +96,18 @@ public class RoleServiceImpl implements RoleService {
         userInfo.setRoleId(roleId);
         userInfoRepository.save(userInfo);
         return ResultUtil.success();
+    }
+
+    @Override
+    public Result getRoleWithPage(Integer pageNum, Integer pageSize, String roleName, Long startTime, Long endTime) {
+        if (pageNum < -1) {
+            pageNum = 1;
+        }
+        Sort sort = new Sort(Sort.Direction.DESC, "c_time");
+        PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize, sort);
+        Page<Role> page = roleRepository.getAllWithPage(pageRequest, roleName, startTime, endTime);
+        page.setPageSize(pageSize);
+        page.setPageIndex(pageNum);
+        return ResultUtil.success(page);
     }
 }

@@ -18,4 +18,8 @@ public interface OperationLogService {
      * @return
      */
     Result getLogList(Integer[] type);
+
+    Result getLogWithPage(Integer pageNum, Integer pageSize, String userName, Integer type, Long startTime, Long endTime);
+
+    Result getLogType();
 }

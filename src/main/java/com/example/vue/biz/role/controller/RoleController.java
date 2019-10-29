@@ -47,4 +47,13 @@ public class RoleController {
     public Result getAllRoles(@PathVariable("user-id")String userId, @PathVariable("role-id")Long roleId) {
         return roleService.assignRoleToUser(userId, roleId);
     }
+
+    @RequestMapping(value = "/role/page", method = RequestMethod.GET)
+    public Result getAllRoles(@RequestParam("page_index") Integer pageNum,
+                              @RequestParam("page_size") Integer pageSize,
+                              @RequestParam(value = "roleName", required = false) String roleName,
+                              @RequestParam(value = "startTime", required = false) Long startTime,
+                              @RequestParam(value = "endTime", required = false) Long endTime) {
+        return roleService.getRoleWithPage(pageNum, pageSize, roleName, startTime, endTime);
+    }
 }

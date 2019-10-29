@@ -26,6 +26,8 @@ public class OperationLog {
     @Field("type")
     private Integer type;
 
+    private String typeName;
+
     @Field("desc")
     private String desc;
 

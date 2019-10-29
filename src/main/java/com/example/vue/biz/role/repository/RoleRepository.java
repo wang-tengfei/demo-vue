@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * @author tengfei
  */
-public interface RoleRepository extends MongoRepository<Role, Long> {
+public interface RoleRepository extends MongoRepository<Role, Long>, RoleRepositoryCustom {
 
     /**
      * get one by id

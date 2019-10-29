@@ -30,7 +30,6 @@ public class SaveEventListener extends AbstractMongoEventListener<Object> {
 
     @Override
     public void onBeforeConvert(BeforeConvertEvent<Object> event) {
-        log.info(event.getSource().toString());
         final Object source = event.getSource();
         if (source != null) {
             ReflectionUtils.doWithFields(source.getClass(), (Field field) -> {
