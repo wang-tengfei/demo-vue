@@ -4,7 +4,7 @@ import com.example.vue.common.ResultUtil;
 import com.example.vue.common.constant.Page;
 import com.example.vue.common.constant.Result;
 import com.example.vue.common.constant.ResultEnum;
-import com.example.vue.common.constant.VueConstant;
+import com.example.vue.common.constant.KeyConstant;
 import com.example.vue.biz.role.domain.Role;
 import com.example.vue.biz.role.repository.RoleRepository;
 import com.example.vue.biz.user.modle.UserInfo;
@@ -44,7 +44,7 @@ public class RoleServiceImpl implements RoleService {
             return ResultUtil.error(ResultEnum.REPEAT_ROLE_NAME);
         }
         role.setCreateTime(System.currentTimeMillis());
-        role.setStatus(VueConstant.STATUS_NORMAL);
+        role.setStatus(KeyConstant.STATUS_NORMAL);
         Role save = roleRepository.save(role);
         return ResultUtil.success(save);
     }
@@ -67,7 +67,7 @@ public class RoleServiceImpl implements RoleService {
         Optional<Role> roleOptional = roleRepository.findById(id);
         if (roleOptional.isPresent()) {
             Role role = roleOptional.get();
-            role.setStatus(VueConstant.STATUS_DELETE);
+            role.setStatus(KeyConstant.STATUS_DELETE);
             roleRepository.save(role);
             return ResultUtil.success();
         }

@@ -4,6 +4,8 @@ import com.example.vue.common.constant.Result;
 import com.example.vue.common.exception.CustomerException;
 import com.example.vue.biz.user.modle.UserInfo;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author: Tengfei Wang
  * @description:
@@ -14,7 +16,7 @@ public interface OauthService {
 
     String getToken(UserInfo user);
 
-    boolean verifyToken(String token) throws CustomerException;
+    boolean verifyToken(String token, HttpServletRequest request) throws CustomerException;
 
     Result getUserToken(String userId);
 }

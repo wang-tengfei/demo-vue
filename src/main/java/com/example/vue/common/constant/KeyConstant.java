@@ -6,7 +6,7 @@ package com.example.vue.common.constant;
  * @date: Created in 11:18 2019-06-20
  * @modified by:
  */
-public class VueConstant {
+public class KeyConstant {
 
     public static final String HEX_STRING = "0123456789ABCDEF";
 
@@ -19,6 +19,8 @@ public class VueConstant {
     public static final Integer[] EFFECTIVE_STATUS = {STATUS_NORMAL, STATUS_DISABLE};
 
     public static final String REDIS_LOGIN_USER_PREFIX = "login-user-";
+
+    public static final String LOGIN_USER = "loginUser";
 
     /** 日志类型 */
     public static final Integer LOG_TYPE_LOGIN = 1;

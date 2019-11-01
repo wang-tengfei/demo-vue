@@ -23,7 +23,7 @@ public enum  ResultEnum {
 
     TOKEN_EXPIRED(100005, "Token 已失效"),
 
-    TOKEN_IS_EMPTY(100006, "缺失 token"),
+    TOKEN_IS_EMPTY(100006, "Token 缺失"),
 
     DISABLE_USER(100007, "您的账户被冻结，暂时无法登录，请联系管理员"),
 
@@ -31,7 +31,7 @@ public enum  ResultEnum {
 
     INVALID_PARENT_ID(100009, "父 ID 无效"),
 
-    REPEATE_NAME(1000010, "名称重复"),
+    REPEAT_NAME(1000010, "名称重复"),
 
     REPEAT_ROLE_NAME(100011, "角色名称不能重复"),
 

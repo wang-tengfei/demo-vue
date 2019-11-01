@@ -2,12 +2,10 @@ package com.example.vue.biz.log.service;
 
 import com.example.vue.biz.log.domain.OperationLog;
 import com.example.vue.biz.log.repository.OperationLogRepository;
-import com.example.vue.biz.role.domain.Role;
 import com.example.vue.common.ResultUtil;
 import com.example.vue.common.constant.LoginType;
 import com.example.vue.common.constant.Page;
 import com.example.vue.common.constant.Result;
-import com.example.vue.common.constant.VueConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;

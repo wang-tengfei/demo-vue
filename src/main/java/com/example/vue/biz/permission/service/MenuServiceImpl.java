@@ -3,7 +3,7 @@ package com.example.vue.biz.permission.service;
 import com.example.vue.common.ResultUtil;
 import com.example.vue.common.constant.Result;
 import com.example.vue.common.constant.ResultEnum;
-import com.example.vue.common.constant.VueConstant;
+import com.example.vue.common.constant.KeyConstant;
 import com.example.vue.biz.permission.domain.Permission;
 import com.example.vue.biz.permission.repository.MenuRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -40,10 +40,10 @@ public class MenuServiceImpl implements MenuService {
         }
         List<Permission> menuList = menuRepository.findByMenuName(menu.getPermissionName());
         if (menuList.size() > 0) {
-            return ResultUtil.error(ResultEnum.REPEATE_NAME);
+            return ResultUtil.error(ResultEnum.REPEAT_NAME);
         }
         menu.setId(UUID.randomUUID().toString());
-        menu.setStatus(VueConstant.STATUS_NORMAL);
+        menu.setStatus(KeyConstant.STATUS_NORMAL);
         menu.setCreateTime(System.currentTimeMillis());
         Permission save = menuRepository.save(menu);
         return ResultUtil.success(save);
@@ -61,7 +61,7 @@ public class MenuServiceImpl implements MenuService {
         Permission menuDb = menuOptional.get();
         List<Permission> menuList = menuRepository.findByMenuName(menu.getPermissionName());
         if (menuList.size() > 0 && !menuList.get(0).getId().equals(menuDb.getId())) {
-            return ResultUtil.error(ResultEnum.REPEATE_NAME);
+            return ResultUtil.error(ResultEnum.REPEAT_NAME);
         }
 
         String parentId = menu.getParentId();
@@ -92,11 +92,11 @@ public class MenuServiceImpl implements MenuService {
         if (!StringUtils.isEmpty(menu.getParentId())) {
             List<Permission> menuList = menuRepository.findByParentId(menu.getParentId());
             if (deleteChild && menuList.size() > 0) {
-                menuList.forEach(w -> w.setStatus(VueConstant.STATUS_DELETE));
+                menuList.forEach(w -> w.setStatus(KeyConstant.STATUS_DELETE));
                 menuRepository.saveAll(menuList);
             }
         }
-        menu.setStatus(VueConstant.STATUS_DELETE);
+        menu.setStatus(KeyConstant.STATUS_DELETE);
         menuRepository.save(menu);
         return ResultUtil.success();
     }

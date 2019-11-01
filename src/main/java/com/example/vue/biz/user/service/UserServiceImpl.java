@@ -5,7 +5,7 @@ import com.example.vue.common.ResultUtil;
 import com.example.vue.common.constant.Page;
 import com.example.vue.common.constant.Result;
 import com.example.vue.common.constant.ResultEnum;
-import com.example.vue.common.constant.VueConstant;
+import com.example.vue.common.constant.KeyConstant;
 import com.example.vue.biz.oauth.repository.UserEntity;
 import com.example.vue.biz.oauth.service.OauthService;
 import com.example.vue.biz.user.modle.UserInfo;
@@ -45,13 +45,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result addUser(UserInfo userInfo) {
-        Long userCount = userInfoRepository.getUserCount(userInfo.getUserName(), VueConstant.EFFECTIVE_STATUS);
+        Long userCount = userInfoRepository.getUserCount(userInfo.getUserName(), KeyConstant.EFFECTIVE_STATUS);
         if (userCount != null && userCount > 0) {
             return ResultUtil.error(ResultEnum.USERNAME_EXIST);
         }
         userInfo.setCreateTime(System.currentTimeMillis());
         userInfo.setId(UUID.randomUUID().toString());
-        userInfo.setStatus(VueConstant.STATUS_NORMAL);
+        userInfo.setStatus(KeyConstant.STATUS_NORMAL);
         UserInfo save = userInfoRepository.save(userInfo);
         return ResultUtil.success(save);
     }
@@ -100,14 +100,14 @@ public class UserServiceImpl implements UserService {
             Optional<UserInfo> userInfoOptional = userInfoRepository.findById(userId);
             if (userInfoOptional.isPresent()) {
                 userInfo = userInfoOptional.get();
-                userInfo.setStatus(VueConstant.STATUS_DELETE);
+                userInfo.setStatus(KeyConstant.STATUS_DELETE);
                 userInfoRepository.save(userInfo);
-                logService.addLog(userId, userInfo.getUserName(), VueConstant.LOG_TYPE_DELETE_USER, "", VueConstant.RESULT_SUCCESS);
+                logService.addLog(userId, userInfo.getUserName(), KeyConstant.LOG_TYPE_DELETE_USER, "", KeyConstant.RESULT_SUCCESS);
                 return ResultUtil.success();
             }
             return ResultUtil.error(ResultEnum.NOT_FOUND);
         } catch (Exception e) {
-            logService.addLog(userId, userInfo.getUserName(), VueConstant.LOG_TYPE_DELETE_USER, "", VueConstant.RESULT_FAIL);
+            logService.addLog(userId, userInfo.getUserName(), KeyConstant.LOG_TYPE_DELETE_USER, "", KeyConstant.RESULT_FAIL);
             return ResultUtil.error(ResultEnum.SERVER_ERROR);
         }
 
@@ -127,12 +127,12 @@ public class UserServiceImpl implements UserService {
 
         Optional<UserInfo> userInfo = userInfoRepository.getUserInfoByUserNameAndPassword(userName, password);
         if (!userInfo.isPresent()) {
-            logService.addLog(null, userName, VueConstant.LOG_TYPE_LOGIN, ResultEnum.PASSWORD_WRONG.getMsg(), VueConstant.RESULT_FAIL);
+            logService.addLog(null, userName, KeyConstant.LOG_TYPE_LOGIN, ResultEnum.PASSWORD_WRONG.getMsg(), KeyConstant.RESULT_FAIL);
             return ResultUtil.error(ResultEnum.PASSWORD_WRONG);
         }
         UserInfo user = userInfo.get();
-        if (user.getStatus().equals(VueConstant.STATUS_DISABLE)) {
-            logService.addLog(user.getId(), userName, VueConstant.LOG_TYPE_LOGIN, ResultEnum.DISABLE_USER.getMsg(), VueConstant.RESULT_FAIL);
+        if (user.getStatus().equals(KeyConstant.STATUS_DISABLE)) {
+            logService.addLog(user.getId(), userName, KeyConstant.LOG_TYPE_LOGIN, ResultEnum.DISABLE_USER.getMsg(), KeyConstant.RESULT_FAIL);
             return ResultUtil.error(ResultEnum.DISABLE_USER);
         }
         String token = oauthService.getToken(user);
@@ -141,7 +141,7 @@ public class UserServiceImpl implements UserService {
         }
         UserEntity userEntity = new UserEntity(user.getId(), userName, token, 7200L);
         ValueOperations<String, Object> operations = redisTemplate.opsForValue();
-        operations.set(VueConstant.REDIS_LOGIN_USER_PREFIX + userEntity.getUserId(), userEntity,2, TimeUnit.HOURS);
+        operations.set(KeyConstant.REDIS_LOGIN_USER_PREFIX + userEntity.getUserId(), userEntity,2, TimeUnit.HOURS);
 
         //设置登录信息
         user.setLoginTime(System.currentTimeMillis());
@@ -149,7 +149,7 @@ public class UserServiceImpl implements UserService {
         user.setLoginCount(user.getLoginTime() + 1);
         userInfoRepository.save(user);
 
-        logService.addLog(user.getId(), user.getUserName(), VueConstant.LOG_TYPE_LOGIN, "", VueConstant.RESULT_SUCCESS);
+        logService.addLog(user.getId(), user.getUserName(), KeyConstant.LOG_TYPE_LOGIN, "", KeyConstant.RESULT_SUCCESS);
 
         return ResultUtil.success(userEntity);
     }
@@ -160,9 +160,9 @@ public class UserServiceImpl implements UserService {
         if (!userInfoOptional.isPresent()) {
             return ResultUtil.error(ResultEnum.NOT_FOUND);
         }
-        redisTemplate.delete(VueConstant.REDIS_LOGIN_USER_PREFIX + userId);
+        redisTemplate.delete(KeyConstant.REDIS_LOGIN_USER_PREFIX + userId);
 
-        logService.addLog(userId, userInfoOptional.get().getUserName(), VueConstant.LOG_TYPE_LOGIN_OUT, "", VueConstant.RESULT_SUCCESS);
+        logService.addLog(userId, userInfoOptional.get().getUserName(), KeyConstant.LOG_TYPE_LOGIN_OUT, "", KeyConstant.RESULT_SUCCESS);
         return ResultUtil.success();
     }
 
@@ -173,7 +173,7 @@ public class UserServiceImpl implements UserService {
             UserInfo userInfo = userInfoOptional.get();
             userInfo.setPassword(password);
             userInfoRepository.save(userInfo);
-            logService.addLog(userId, userInfoOptional.get().getUserName(), VueConstant.LOG_TYPE_UPDATE_PASS, "", VueConstant.RESULT_SUCCESS);
+            logService.addLog(userId, userInfoOptional.get().getUserName(), KeyConstant.LOG_TYPE_UPDATE_PASS, "", KeyConstant.RESULT_SUCCESS);
             return ResultUtil.success();
         }
         return ResultUtil.error(ResultEnum.NOT_FOUND);
@@ -186,9 +186,9 @@ public class UserServiceImpl implements UserService {
             return ResultUtil.error(ResultEnum.NOT_FOUND);
         }
         UserInfo userInfo = userInfoOptional.get();
-        userInfo.setStatus(VueConstant.STATUS_DISABLE);
+        userInfo.setStatus(KeyConstant.STATUS_DISABLE);
         userInfoRepository.save(userInfo);
-        logService.addLog(userId, userInfoOptional.get().getUserName(), VueConstant.LOG_TYPE_DISABLE_USER, "", VueConstant.RESULT_SUCCESS);
+        logService.addLog(userId, userInfoOptional.get().getUserName(), KeyConstant.LOG_TYPE_DISABLE_USER, "", KeyConstant.RESULT_SUCCESS);
         return ResultUtil.success();
     }
 
@@ -199,9 +199,9 @@ public class UserServiceImpl implements UserService {
             return ResultUtil.error(ResultEnum.NOT_FOUND);
         }
         UserInfo userInfo = userInfoOptional.get();
-        userInfo.setStatus(VueConstant.STATUS_NORMAL);
+        userInfo.setStatus(KeyConstant.STATUS_NORMAL);
         userInfoRepository.save(userInfo);
-        logService.addLog(userId, userInfoOptional.get().getUserName(), VueConstant.LOG_TYPE_ENABLE_USER, "", VueConstant.RESULT_SUCCESS);
+        logService.addLog(userId, userInfoOptional.get().getUserName(), KeyConstant.LOG_TYPE_ENABLE_USER, "", KeyConstant.RESULT_SUCCESS);
         return ResultUtil.success();
     }
 

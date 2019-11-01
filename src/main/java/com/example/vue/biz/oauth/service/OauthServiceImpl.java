@@ -11,6 +11,7 @@ import com.example.vue.common.DesEncrypt;
 import com.example.vue.common.ResultUtil;
 import com.example.vue.common.constant.Result;
 import com.example.vue.common.constant.ResultEnum;
+import com.example.vue.common.constant.KeyConstant;
 import com.example.vue.common.exception.CustomerException;
 import com.example.vue.biz.oauth.repository.UserEntity;
 import com.example.vue.biz.user.modle.UserInfo;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import sun.misc.BASE64Decoder;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -87,7 +89,7 @@ public class OauthServiceImpl implements OauthService {
 
 
     @Override
-    public boolean verifyToken(String token) throws CustomerException {
+    public boolean verifyToken(String token, HttpServletRequest request) throws CustomerException {
 
         if (StringUtils.isEmpty(token)) {
             throw new CustomerException(ResultEnum.TOKEN_IS_EMPTY);
@@ -112,6 +114,7 @@ public class OauthServiceImpl implements OauthService {
             }
             String uid = DesEncrypt.decrypt(aud.asText());
 
+            UserInfo user = null;
             String userToken = stringRedisTemplate.opsForValue().get(TOKEN_PREFIX + uid);
             // 如果redis没有，直接使用jwt验证
             if (StringUtils.isEmpty(userToken)) {
@@ -125,12 +128,15 @@ public class OauthServiceImpl implements OauthService {
                     log.error("user {}, not found", userId);
                     throw new CustomerException(ResultEnum.TOKEN_INVALID);
                 }
+                user = userInfo.get();
             }
             if (!token.equals(userToken)) {
                 log.error("token 信息不一致");
                 throw new CustomerException(ResultEnum.TOKEN_INVALID);
             }
-        }catch (TokenExpiredException e1) {
+
+            request.setAttribute(KeyConstant.LOGIN_USER, user == null ? userInfoRepository.findById(uid) : user);
+        } catch (TokenExpiredException e1) {
             throw new CustomerException(ResultEnum.TOKEN_EXPIRED);
         } catch (JWTVerificationException e2) {
             log.error("valid token error: {}", e2.getMessage());

@@ -35,7 +35,7 @@ public class OauthInterceptor implements HandlerInterceptor {
          ValidToken tokenMethod = method.getAnnotation(ValidToken.class);
          if (tokenClass == null || tokenClass.request()) {
              if (tokenMethod == null || tokenMethod.request()) {
-                 return oauthService.verifyToken(token);
+                 return oauthService.verifyToken(token, request);
              }
          }
          return true;

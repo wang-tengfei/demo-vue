@@ -1,9 +1,7 @@
 package com.example.vue.biz.log.repository;
 
 import com.example.vue.biz.log.domain.OperationLog;
-import com.example.vue.biz.role.domain.Role;
 import com.example.vue.common.constant.Page;
-import com.example.vue.common.constant.VueConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;

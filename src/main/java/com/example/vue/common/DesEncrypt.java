@@ -1,6 +1,6 @@
 package com.example.vue.common;
 
-import com.example.vue.common.constant.VueConstant;
+import com.example.vue.common.constant.KeyConstant;
 import org.springframework.util.StringUtils;
 
 import javax.crypto.Cipher;
@@ -112,7 +112,7 @@ public class DesEncrypt {
     }
 
     private static byte charToByte(char c) {
-        return (byte) VueConstant.HEX_STRING.indexOf(c);
+        return (byte) KeyConstant.HEX_STRING.indexOf(c);
     }
 
 }

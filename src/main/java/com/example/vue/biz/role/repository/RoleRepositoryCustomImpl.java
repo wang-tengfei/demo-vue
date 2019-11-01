@@ -2,7 +2,7 @@ package com.example.vue.biz.role.repository;
 
 import com.example.vue.biz.role.domain.Role;
 import com.example.vue.common.constant.Page;
-import com.example.vue.common.constant.VueConstant;
+import com.example.vue.common.constant.KeyConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -35,7 +35,7 @@ public class RoleRepositoryCustomImpl implements RoleRepositoryCustom {
         if (startTime != null && endTime != null) {
             query.addCriteria(Criteria.where("c_time").gte(startTime).lte(endTime));
         }
-        query.addCriteria(Criteria.where("status").is(VueConstant.STATUS_NORMAL));
+        query.addCriteria(Criteria.where("status").is(KeyConstant.STATUS_NORMAL));
 
         Page<Role> rolePage = new Page<>();
         long count = mongoTemplate.count(query, Role.class);

@@ -1,7 +1,7 @@
 package com.example.vue.biz.user.repository;
 
 import com.example.vue.common.constant.Page;
-import com.example.vue.common.constant.VueConstant;
+import com.example.vue.common.constant.KeyConstant;
 import com.example.vue.biz.user.modle.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +33,7 @@ public class UserInfoRepositoryCustomImpl implements UserInfoRepositoryCustom {
         if (status != null && status.length > 0) {
             query.addCriteria(Criteria.where("status").in(status));
         }else {
-            query.addCriteria(Criteria.where("status").nin(VueConstant.STATUS_DELETE));
+            query.addCriteria(Criteria.where("status").nin(KeyConstant.STATUS_DELETE));
         }
         if (startTime != null && endTime != null) {
             query.addCriteria(Criteria.where("c_time").gte(startTime).lte(endTime));
