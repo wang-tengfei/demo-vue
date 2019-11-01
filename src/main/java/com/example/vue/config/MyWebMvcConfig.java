@@ -20,6 +20,6 @@ public class MyWebMvcConfig extends WebMvcConfigurationSupport {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(oauthInterceptor).addPathPatterns("/a");
+        registry.addInterceptor(oauthInterceptor).addPathPatterns("/**");
     }
 }

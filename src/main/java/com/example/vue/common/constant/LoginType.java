@@ -15,9 +15,9 @@ public enum LoginType {
 
 
     /*登录*/
-    LOGIN(1, "登录"),
+    LOGIN(1, "用户登录"),
 
-    LOGIN_OUT(2, "登出"),
+    LOGIN_OUT(2, "用户登出"),
 
     ADD_USER(3, "添加用户"),
 
@@ -27,7 +27,9 @@ public enum LoginType {
 
     DISABLE_USER(6, "禁用用户"),
 
-    ENABLE_USER(7, "开启用户");
+    ENABLE_USER(7, "开启用户"),
+
+    UPDATE_PASS(7, "修改密码");
 
 
     public Integer type;

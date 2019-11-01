@@ -27,7 +27,7 @@ public class OauthInterceptor implements HandlerInterceptor {
 
      @Override
      public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-         String token = request.getHeader("token");
+         String token = request.getHeader("Authorization");
          HandlerMethod handlerMethod = (HandlerMethod) handler;
          Method method = handlerMethod.getMethod();
 

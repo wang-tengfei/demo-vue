@@ -1,6 +1,7 @@
 package com.example.vue.config.aop;
 
 import com.example.vue.common.constant.Result;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -22,11 +23,10 @@ import java.util.Arrays;
  */
 @Component
 @Aspect
+@Slf4j
 public class WebLogAspect {
 
-    private Logger logger = LoggerFactory.getLogger(WebLogAspect.class);
-
-    @Pointcut(value = "execution(* com.example.vue.*.controller.*Controller.*(..))")
+    @Pointcut(value = "execution(* com.example.vue.biz.*.controller.*Controller.*(..))")
     public void pointcut(){}
 
 
@@ -36,18 +36,18 @@ public class WebLogAspect {
         HttpServletRequest request = requestAttributes.getRequest();
 
         String url = request.getRequestURL().toString();
-        logger.info("URL : " + url);
-        logger.info("HTTP_METHOD : " + request.getMethod());
-        logger.info("IP : " + request.getRemoteAddr());
-        logger.info("CLASS_METHOD : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
-        logger.info("ARGS : " + Arrays.toString(joinPoint.getArgs()));
+        log.info("URL : " + url);
+        log.info("HTTP_METHOD : " + request.getMethod());
+        log.info("IP : " + request.getRemoteAddr());
+        log.info("CLASS_METHOD : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
+        log.info("ARGS : " + Arrays.toString(joinPoint.getArgs()));
 
         long start = System.currentTimeMillis();
         Result proceed = (Result) joinPoint.proceed();
         long end = System.currentTimeMillis();
 
-        logger.info("RESPONSE : code:"+ proceed.getCode() + ", msg:" + proceed.getMsg());
-        logger.info("本操作用时："+(end - start) + "毫秒");
+        log.info("RESPONSE : code:"+ proceed.getCode() + ", msg:" + proceed.getMsg());
+        log.info("本操作用时："+(end - start) + "毫秒");
         return proceed;
     }
 

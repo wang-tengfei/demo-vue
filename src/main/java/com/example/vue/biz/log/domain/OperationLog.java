@@ -28,6 +28,9 @@ public class OperationLog {
 
     private String typeName;
 
+    @Field("log_status")
+    private Integer logStatus;
+
     @Field("desc")
     private String desc;
 

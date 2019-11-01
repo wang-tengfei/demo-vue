@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/vue")
 @Validated
+@ValidToken
 public class UserController {
 
     @Autowired
@@ -48,7 +49,6 @@ public class UserController {
         return userService.getAllUserName();
     }
 
-    @ValidToken
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     public Result getUsers() {
         return userService.getAllUsers();
@@ -77,19 +77,16 @@ public class UserController {
     }
 
 
-    @ValidToken(request = false)
     @RequestMapping(value = "/user/password/{user-id}", method = RequestMethod.POST)
     public Result updatePassword(@PathVariable("user-id")String userId, @RequestParam("password")String password) {
         return userService.updatePassword(userId, password);
     }
 
-    @ValidToken(request = false)
     @RequestMapping(value = "/user/disable/{user-id}", method = RequestMethod.POST)
     public Result disableUser(@PathVariable("user-id")String userId) {
         return userService.disableUser(userId);
     }
 
-    @ValidToken(request = false)
     @RequestMapping(value = "/user/enable/{user-id}", method = RequestMethod.POST)
     public Result enableUser(@PathVariable("user-id")String userId) {
         return userService.enableUser(userId);

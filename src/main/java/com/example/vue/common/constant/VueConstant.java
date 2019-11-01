@@ -20,6 +20,7 @@ public class VueConstant {
 
     public static final String REDIS_LOGIN_USER_PREFIX = "login-user-";
 
+    /** 日志类型 */
     public static final Integer LOG_TYPE_LOGIN = 1;
 
     public static final Integer LOG_TYPE_LOGIN_OUT = 2;
@@ -33,4 +34,11 @@ public class VueConstant {
     public static final Integer LOG_TYPE_DISABLE_USER = 6;
 
     public static final Integer LOG_TYPE_ENABLE_USER = 7;
+
+    public static final Integer LOG_TYPE_UPDATE_PASS = 8;
+
+    /** 操作结果 */
+    public static final Integer RESULT_SUCCESS = 0;
+
+    public static final Integer RESULT_FAIL = 1;
 }

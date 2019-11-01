@@ -18,13 +18,13 @@ public class LogController {
     @Autowired
     private OperationLogService logService;
 
-    @RequestMapping("/logs")
+    @RequestMapping(value = "/logs", method = RequestMethod.GET)
     public Result getLogs(@RequestParam(value = "type", required = false) Integer[] type) {
         return logService.getLogList(type);
     }
 
     @RequestMapping(value = "/logs/page", method = RequestMethod.GET)
-    public Result getAllRoles(@RequestParam("page_index") Integer pageNum,
+    public Result getLogWithPage(@RequestParam("page_index") Integer pageNum,
                               @RequestParam("page_size") Integer pageSize,
                               @RequestParam(value = "userName", required = false) String userName,
                               @RequestParam(value = "type", required = false) Integer type,
@@ -33,7 +33,7 @@ public class LogController {
         return logService.getLogWithPage(pageNum, pageSize, userName, type, startTime, endTime);
     }
 
-    @RequestMapping("/log-type")
+    @RequestMapping(value = "/log-type", method = RequestMethod.GET)
     public Result getLogType() {
         return logService.getLogType();
     }

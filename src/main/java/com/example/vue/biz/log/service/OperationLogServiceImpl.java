@@ -28,13 +28,14 @@ public class OperationLogServiceImpl implements OperationLogService {
     private OperationLogRepository logRepository;
 
     @Override
-    public void addLog(String userId, String userName, Integer type, String desc) {
+    public void addLog(String userId, String userName, Integer type, String desc, Integer status) {
         OperationLog operationLog = new OperationLog();
         operationLog.setId(UUID.randomUUID().toString());
         operationLog.setUserId(userId);
         operationLog.setUserName(userName);
         operationLog.setType(type);
         operationLog.setDesc(desc);
+        operationLog.setLogStatus(status);
         operationLog.setCreateTime(System.currentTimeMillis());
         log.info("操作：{}", operationLog);
         logRepository.save(operationLog);

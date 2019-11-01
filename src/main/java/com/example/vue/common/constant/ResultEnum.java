@@ -21,11 +21,9 @@ public enum  ResultEnum {
 
     TOKEN_INVALID(100004, "Token 无效"),
 
-    TOKEN_EXPIRED(100004, "Token 已失效"),
+    TOKEN_EXPIRED(100005, "Token 已失效"),
 
-    TOKEN_IS_EMPTY(100005, "缺失 token"),
-
-    USERNAME_EXIST(100006, "用户名已经存在"),
+    TOKEN_IS_EMPTY(100006, "缺失 token"),
 
     DISABLE_USER(100007, "您的账户被冻结，暂时无法登录，请联系管理员"),
 
@@ -37,6 +35,7 @@ public enum  ResultEnum {
 
     REPEAT_ROLE_NAME(100011, "角色名称不能重复"),
 
+    USERNAME_EXIST(1000012, "用户名已经存在"),
 
 
     /** 操作成功返回数据 */
