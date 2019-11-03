@@ -2,11 +2,14 @@ package com.example.vue.biz.role.service;
 
 import com.example.vue.common.constant.Result;
 import com.example.vue.biz.role.domain.Role;
+import com.example.vue.common.service.CommonService;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author tengfei
  */
-public interface RoleService {
+public interface RoleService extends CommonService {
 
     /**
      * get one role
@@ -49,7 +52,7 @@ public interface RoleService {
      * @param roleId
      * @return
      */
-    Result assignRoleToUser(String userId, Long roleId);
+    Result assignRoleToUser(HttpServletRequest request, String userId, Long roleId);
 
     Result getRoleWithPage(Integer pageNum, Integer pageSize, String username, Long startTime, Long endTime);
 }

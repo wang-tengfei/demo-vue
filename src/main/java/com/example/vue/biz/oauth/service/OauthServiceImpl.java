@@ -58,7 +58,7 @@ public class OauthServiceImpl implements OauthService {
         map.put("typ", "JWT");
 
         Date date = new Date();
-        Date expireDate = getAfterDate(date, 0, 0, 0, 2, 0, 0);
+        Date expireDate = getAfterDate(date, 0, 0, 0, KeyConstant.EXPIRE_TIME_HOUR, 0, 0);
         Algorithm algorithm = Algorithm.HMAC256(SECRET);
         try {
             String token = JWT.create()
@@ -135,7 +135,7 @@ public class OauthServiceImpl implements OauthService {
                 throw new CustomerException(ResultEnum.TOKEN_INVALID);
             }
 
-            request.setAttribute(KeyConstant.LOGIN_USER, user == null ? userInfoRepository.findById(uid) : user);
+            request.setAttribute(KeyConstant.LOGIN_USER, user == null ? userInfoRepository.findById(uid).orElse(null) : user);
         } catch (TokenExpiredException e1) {
             throw new CustomerException(ResultEnum.TOKEN_EXPIRED);
         } catch (JWTVerificationException e2) {

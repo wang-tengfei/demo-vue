@@ -37,6 +37,10 @@ public enum  ResultEnum {
 
     USERNAME_EXIST(1000012, "用户名已经存在"),
 
+    DELETE_SELF_ERROR(1000013, "您不能删除自己"),
+
+    ROLE_USE_BY_USER(1000014, "该角色被用户使用，不能删除"),
+
 
     /** 操作成功返回数据 */
     SUCCESS(200, "Success");

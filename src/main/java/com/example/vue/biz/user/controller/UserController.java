@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author: Tengfei Wang
  * @description:
@@ -24,19 +26,19 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping(value = "/user", method = RequestMethod.POST)
-    public Result addUser(@Validated(UserInfo.UpdateUser.class) @RequestBody UserInfo userInfo) {
-        return userService.addUser(userInfo);
+    public Result addUser(HttpServletRequest request, @Validated(UserInfo.UpdateUser.class) @RequestBody UserInfo userInfo) {
+        return userService.addUser(request, userInfo);
     }
 
     @RequestMapping(value = "/user/{user_id}", method = RequestMethod.PUT)
-    public Result editUser(@PathVariable("user_id")String userId, @Validated(UserInfo.UpdateUser.class) @RequestBody UserInfo userInfo) {
+    public Result editUser(HttpServletRequest request, @PathVariable("user_id")String userId, @Validated(UserInfo.UpdateUser.class) @RequestBody UserInfo userInfo) {
         userInfo.setId(userId);
-        return userService.editUser(userInfo);
+        return userService.editUser(request, userInfo);
     }
 
     @RequestMapping(value = "/user/{user_id}", method = RequestMethod.DELETE)
-    public Result editUserById(@PathVariable("user_id")String userId) {
-        return userService.deleteUserById(userId);
+    public Result editUserById(HttpServletRequest request, @PathVariable("user_id")String userId) {
+        return userService.deleteUserById(request, userId);
     }
 
     @RequestMapping(value = "/user/{user_id}", method = RequestMethod.GET)
@@ -78,17 +80,17 @@ public class UserController {
 
 
     @RequestMapping(value = "/user/password/{user-id}", method = RequestMethod.POST)
-    public Result updatePassword(@PathVariable("user-id")String userId, @RequestParam("password")String password) {
-        return userService.updatePassword(userId, password);
+    public Result updatePassword(HttpServletRequest request, @PathVariable("user-id")String userId, @RequestParam("password")String password) {
+        return userService.updatePassword(request, userId, password);
     }
 
     @RequestMapping(value = "/user/disable/{user-id}", method = RequestMethod.POST)
-    public Result disableUser(@PathVariable("user-id")String userId) {
-        return userService.disableUser(userId);
+    public Result disableUser(HttpServletRequest request, @PathVariable("user-id")String userId) {
+        return userService.disableUser(request, userId);
     }
 
     @RequestMapping(value = "/user/enable/{user-id}", method = RequestMethod.POST)
-    public Result enableUser(@PathVariable("user-id")String userId) {
-        return userService.enableUser(userId);
+    public Result enableUser(HttpServletRequest request, @PathVariable("user-id")String userId) {
+        return userService.enableUser(request, userId);
     }
 }

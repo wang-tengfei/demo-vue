@@ -1,10 +1,8 @@
 package com.example.vue.biz.role.service;
 
+import com.example.vue.biz.log.service.OperationLogService;
 import com.example.vue.common.ResultUtil;
-import com.example.vue.common.constant.Page;
-import com.example.vue.common.constant.Result;
-import com.example.vue.common.constant.ResultEnum;
-import com.example.vue.common.constant.KeyConstant;
+import com.example.vue.common.constant.*;
 import com.example.vue.biz.role.domain.Role;
 import com.example.vue.biz.role.repository.RoleRepository;
 import com.example.vue.biz.user.modle.UserInfo;
@@ -15,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +23,9 @@ import java.util.Optional;
 @Service
 @Slf4j
 public class RoleServiceImpl implements RoleService {
+
+    @Autowired
+    private OperationLogService logService;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -67,6 +69,11 @@ public class RoleServiceImpl implements RoleService {
         Optional<Role> roleOptional = roleRepository.findById(id);
         if (roleOptional.isPresent()) {
             Role role = roleOptional.get();
+            List<UserInfo> userInfos = userInfoRepository.getAllUsers();
+            boolean match = userInfos.stream().anyMatch(w -> role.getRoleId() == w.getRoleId());
+            if (match) {
+                return ResultUtil.error(ResultEnum.ROLE_USE_BY_USER);
+            }
             role.setStatus(KeyConstant.STATUS_DELETE);
             roleRepository.save(role);
             return ResultUtil.success();
@@ -81,7 +88,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Result assignRoleToUser(String userId, Long roleId) {
+    public Result assignRoleToUser(HttpServletRequest request, String userId, Long roleId) {
         Optional<UserInfo> userInfoOptional = userInfoRepository.findById(userId);
         if (!userInfoOptional.isPresent()) {
             log.error("user {} is not found", userId);
@@ -95,6 +102,8 @@ public class RoleServiceImpl implements RoleService {
         UserInfo userInfo = userInfoOptional.get();
         userInfo.setRoleId(roleId);
         userInfoRepository.save(userInfo);
+        String format = String.format("Assign role %s to %s", roleId, userId);
+        logService.addLog(this.getRequestUser(request).getId(), this.getRequestUser(request).getUserName(), LoginType.ASSIGN_ROLE.type, format, KeyConstant.RESULT_SUCCESS);
         return ResultUtil.success();
     }
 

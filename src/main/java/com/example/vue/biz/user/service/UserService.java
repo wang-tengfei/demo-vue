@@ -2,6 +2,9 @@ package com.example.vue.biz.user.service;
 
 import com.example.vue.common.constant.Result;
 import com.example.vue.biz.user.modle.UserInfo;
+import com.example.vue.common.service.CommonService;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author: Tengfei Wang
@@ -9,17 +12,17 @@ import com.example.vue.biz.user.modle.UserInfo;
  * @date: Created in 14:07 2019-06-12
  * @modified by:
  */
-public interface UserService {
+public interface UserService extends CommonService {
 
-    Result addUser(UserInfo userInfo);
+    Result addUser(HttpServletRequest request, UserInfo userInfo);
 
     Result getAllUsers();
 
-    Result editUser(UserInfo userInfo);
+    Result editUser(HttpServletRequest request, UserInfo userInfo);
 
     Result getUsersWithPage(Integer pageNum, Integer pageSize, String username, Integer[] status, Long startTime, Long endTime);
 
-    Result deleteUserById(String userId);
+    Result deleteUserById(HttpServletRequest request, String userId);
 
     Result getUserById(String userId);
 
@@ -27,11 +30,11 @@ public interface UserService {
 
     Result loginOut(String userId);
 
-    Result updatePassword(String userId, String password);
+    Result updatePassword(HttpServletRequest request, String userId, String password);
 
-    Result disableUser(String userId);
+    Result disableUser(HttpServletRequest request, String userId);
 
-    Result enableUser(String userId);
+    Result enableUser(HttpServletRequest request, String userId);
 
     Result getAllUserName();
 }

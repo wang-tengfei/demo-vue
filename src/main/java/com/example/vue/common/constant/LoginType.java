@@ -29,7 +29,9 @@ public enum LoginType {
 
     ENABLE_USER(7, "开启用户"),
 
-    UPDATE_PASS(7, "修改密码");
+    UPDATE_PASS(8, "修改密码"),
+
+    ASSIGN_ROLE(9, "分配角色");
 
 
     public Integer type;

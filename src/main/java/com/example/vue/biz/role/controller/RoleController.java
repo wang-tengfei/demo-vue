@@ -6,6 +6,8 @@ import com.example.vue.biz.role.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author tengfei
  */
@@ -44,8 +46,8 @@ public class RoleController {
 
 
     @RequestMapping(value = "/user/{user-id}/role/{role-id}", method = RequestMethod.POST)
-    public Result getAllRoles(@PathVariable("user-id")String userId, @PathVariable("role-id")Long roleId) {
-        return roleService.assignRoleToUser(userId, roleId);
+    public Result getAllRoles(HttpServletRequest request, @PathVariable("user-id") String userId, @PathVariable("role-id") Long roleId) {
+        return roleService.assignRoleToUser(request, userId, roleId);
     }
 
     @RequestMapping(value = "/role/page", method = RequestMethod.GET)

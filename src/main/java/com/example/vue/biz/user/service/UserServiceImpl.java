@@ -2,14 +2,12 @@ package com.example.vue.biz.user.service;
 
 import com.example.vue.biz.log.service.OperationLogService;
 import com.example.vue.common.ResultUtil;
-import com.example.vue.common.constant.Page;
-import com.example.vue.common.constant.Result;
-import com.example.vue.common.constant.ResultEnum;
-import com.example.vue.common.constant.KeyConstant;
+import com.example.vue.common.constant.*;
 import com.example.vue.biz.oauth.repository.UserEntity;
 import com.example.vue.biz.oauth.service.OauthService;
 import com.example.vue.biz.user.modle.UserInfo;
 import com.example.vue.biz.user.repository.UserInfoRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -18,6 +16,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -28,6 +27,7 @@ import java.util.concurrent.TimeUnit;
  * @modified by:
  */
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public Result addUser(UserInfo userInfo) {
+    public Result addUser(HttpServletRequest request, UserInfo userInfo) {
         Long userCount = userInfoRepository.getUserCount(userInfo.getUserName(), KeyConstant.EFFECTIVE_STATUS);
         if (userCount != null && userCount > 0) {
             return ResultUtil.error(ResultEnum.USERNAME_EXIST);
@@ -53,6 +53,7 @@ public class UserServiceImpl implements UserService {
         userInfo.setId(UUID.randomUUID().toString());
         userInfo.setStatus(KeyConstant.STATUS_NORMAL);
         UserInfo save = userInfoRepository.save(userInfo);
+        logService.addLog(this.getRequestUser(request).getId(), this.getRequestUser(request).getUserName(), LoginType.ADD_USER.type, userInfo.getId(), KeyConstant.RESULT_SUCCESS);
         return ResultUtil.success(save);
     }
 
@@ -63,7 +64,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Result editUser(UserInfo userInfo) {
+    public Result editUser(HttpServletRequest request, UserInfo userInfo) {
         Optional<UserInfo> userInfoDb = userInfoRepository.findById(userInfo.getId());
         if (!userInfoDb.isPresent()) {
             return ResultUtil.error(ResultEnum.PARAM_ERROR);
@@ -76,6 +77,7 @@ public class UserServiceImpl implements UserService {
         info.setAddress(userInfo.getAddress());
         info.setUpdateTime(System.currentTimeMillis());
         UserInfo save = userInfoRepository.save(info);
+        logService.addLog(this.getRequestUser(request).getId(), this.getRequestUser(request).getUserName(), LoginType.UPDATE_USER.type, userInfo.getId(), KeyConstant.RESULT_SUCCESS);
         return ResultUtil.success(save);
     }
 
@@ -94,20 +96,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Result deleteUserById(String userId) {
+    public Result deleteUserById(HttpServletRequest request, String userId) {
         UserInfo userInfo = null;
+        UserInfo requestUser = this.getRequestUser(request);
         try {
             Optional<UserInfo> userInfoOptional = userInfoRepository.findById(userId);
             if (userInfoOptional.isPresent()) {
                 userInfo = userInfoOptional.get();
+                if (userInfo.getId().equals(requestUser.getId())) {
+                    return ResultUtil.error(ResultEnum.DELETE_SELF_ERROR);
+                }
                 userInfo.setStatus(KeyConstant.STATUS_DELETE);
                 userInfoRepository.save(userInfo);
-                logService.addLog(userId, userInfo.getUserName(), KeyConstant.LOG_TYPE_DELETE_USER, "", KeyConstant.RESULT_SUCCESS);
+                logService.addLog(requestUser.getId(), requestUser.getUserName(), LoginType.DELETE_USER.type, userId, KeyConstant.RESULT_SUCCESS);
                 return ResultUtil.success();
             }
             return ResultUtil.error(ResultEnum.NOT_FOUND);
         } catch (Exception e) {
-            logService.addLog(userId, userInfo.getUserName(), KeyConstant.LOG_TYPE_DELETE_USER, "", KeyConstant.RESULT_FAIL);
+            log.error("delete user fail : {}", e.getMessage());
+            logService.addLog(requestUser.getId(), requestUser.getUserName(), LoginType.DELETE_USER.type, userId, KeyConstant.RESULT_FAIL);
             return ResultUtil.error(ResultEnum.SERVER_ERROR);
         }
 
@@ -127,12 +134,12 @@ public class UserServiceImpl implements UserService {
 
         Optional<UserInfo> userInfo = userInfoRepository.getUserInfoByUserNameAndPassword(userName, password);
         if (!userInfo.isPresent()) {
-            logService.addLog(null, userName, KeyConstant.LOG_TYPE_LOGIN, ResultEnum.PASSWORD_WRONG.getMsg(), KeyConstant.RESULT_FAIL);
+            logService.addLog(null, userName, LoginType.LOGIN.type, ResultEnum.PASSWORD_WRONG.getMsg(), KeyConstant.RESULT_FAIL);
             return ResultUtil.error(ResultEnum.PASSWORD_WRONG);
         }
         UserInfo user = userInfo.get();
         if (user.getStatus().equals(KeyConstant.STATUS_DISABLE)) {
-            logService.addLog(user.getId(), userName, KeyConstant.LOG_TYPE_LOGIN, ResultEnum.DISABLE_USER.getMsg(), KeyConstant.RESULT_FAIL);
+            logService.addLog(user.getId(), userName, LoginType.LOGIN.type, ResultEnum.DISABLE_USER.getMsg(), KeyConstant.RESULT_FAIL);
             return ResultUtil.error(ResultEnum.DISABLE_USER);
         }
         String token = oauthService.getToken(user);
@@ -149,7 +156,7 @@ public class UserServiceImpl implements UserService {
         user.setLoginCount(user.getLoginTime() + 1);
         userInfoRepository.save(user);
 
-        logService.addLog(user.getId(), user.getUserName(), KeyConstant.LOG_TYPE_LOGIN, "", KeyConstant.RESULT_SUCCESS);
+        logService.addLog(user.getId(), user.getUserName(), LoginType.LOGIN.type, "", KeyConstant.RESULT_SUCCESS);
 
         return ResultUtil.success(userEntity);
     }
@@ -162,25 +169,25 @@ public class UserServiceImpl implements UserService {
         }
         redisTemplate.delete(KeyConstant.REDIS_LOGIN_USER_PREFIX + userId);
 
-        logService.addLog(userId, userInfoOptional.get().getUserName(), KeyConstant.LOG_TYPE_LOGIN_OUT, "", KeyConstant.RESULT_SUCCESS);
+        logService.addLog(userId, userInfoOptional.get().getUserName(), LoginType.LOGIN_OUT.type, "", KeyConstant.RESULT_SUCCESS);
         return ResultUtil.success();
     }
 
     @Override
-    public Result updatePassword(String userId, String password) {
+    public Result updatePassword(HttpServletRequest request, String userId, String password) {
         Optional<UserInfo> userInfoOptional = userInfoRepository.findById(userId);
         if (userInfoOptional.isPresent()) {
             UserInfo userInfo = userInfoOptional.get();
             userInfo.setPassword(password);
             userInfoRepository.save(userInfo);
-            logService.addLog(userId, userInfoOptional.get().getUserName(), KeyConstant.LOG_TYPE_UPDATE_PASS, "", KeyConstant.RESULT_SUCCESS);
+            logService.addLog(this.getRequestUser(request).getId(), this.getRequestUser(request).getUserName(), LoginType.UPDATE_PASS.type, userId, KeyConstant.RESULT_SUCCESS);
             return ResultUtil.success();
         }
         return ResultUtil.error(ResultEnum.NOT_FOUND);
     }
 
     @Override
-    public Result disableUser(String userId) {
+    public Result disableUser(HttpServletRequest request, String userId) {
         Optional<UserInfo> userInfoOptional = userInfoRepository.findById(userId);
         if (!userInfoOptional.isPresent()) {
             return ResultUtil.error(ResultEnum.NOT_FOUND);
@@ -188,12 +195,12 @@ public class UserServiceImpl implements UserService {
         UserInfo userInfo = userInfoOptional.get();
         userInfo.setStatus(KeyConstant.STATUS_DISABLE);
         userInfoRepository.save(userInfo);
-        logService.addLog(userId, userInfoOptional.get().getUserName(), KeyConstant.LOG_TYPE_DISABLE_USER, "", KeyConstant.RESULT_SUCCESS);
+        logService.addLog(this.getRequestUser(request).getId(), this.getRequestUser(request).getUserName(), LoginType.DISABLE_USER.type, userId, KeyConstant.RESULT_SUCCESS);
         return ResultUtil.success();
     }
 
     @Override
-    public Result enableUser(String userId) {
+    public Result enableUser(HttpServletRequest request, String userId) {
         Optional<UserInfo> userInfoOptional = userInfoRepository.findById(userId);
         if (!userInfoOptional.isPresent()) {
             return ResultUtil.error(ResultEnum.NOT_FOUND);
@@ -201,7 +208,7 @@ public class UserServiceImpl implements UserService {
         UserInfo userInfo = userInfoOptional.get();
         userInfo.setStatus(KeyConstant.STATUS_NORMAL);
         userInfoRepository.save(userInfo);
-        logService.addLog(userId, userInfoOptional.get().getUserName(), KeyConstant.LOG_TYPE_ENABLE_USER, "", KeyConstant.RESULT_SUCCESS);
+        logService.addLog(this.getRequestUser(request).getId(), this.getRequestUser(request).getUserName(), LoginType.ENABLE_USER.type, userId, KeyConstant.RESULT_SUCCESS);
         return ResultUtil.success();
     }
 

@@ -25,11 +25,11 @@ import java.util.List;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(value = Exception.class)
+ /*   @ExceptionHandler(value = Exception.class)
     public Result exception(Exception e){
         log.error("exception: {}", e.getMessage());
         return ResultUtil.error(ResultEnum.SERVER_ERROR);
-    }
+    }*/
 
     @ExceptionHandler(value = CustomerException.class)
     public Result exception(CustomerException e){

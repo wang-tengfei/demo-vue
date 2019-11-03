@@ -48,7 +48,7 @@ public class UserInfo {
     @Field("password")
     @NotNull(groups = {AddUser.class})
     @NotEmpty(groups = {AddUser.class})
-    @Length(min = 8, max = 20, groups = {AddUser.class})
+    @Length(min = 6, max = 20, groups = {AddUser.class})
     private String password;
 
     @Field("role_id")
