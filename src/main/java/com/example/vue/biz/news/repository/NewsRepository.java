@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  * @date: Created in 11:47 2019-11-04
  * @modified by:
  */
-public interface NewsRepository extends MongoRepository<News, String> {
+public interface NewsRepository extends MongoRepository<News, String>, NewsRepositoryCustom {
 
 
 }

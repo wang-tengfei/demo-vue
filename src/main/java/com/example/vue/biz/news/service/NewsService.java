@@ -13,7 +13,7 @@ import com.example.vue.common.constant.Result;
  */
 public interface NewsService extends CommonService {
 
-    Result<News> addNews(News news);
+    Result addNews(News news);
 
-    Result<Page<News>> getNewsWithPage(Integer pageNum, Integer pageSize, String username, Long startTime, Long endTime);
+    Result getNewsWithPage(Integer pageNum, Integer pageSize, String title, Integer type, Long startTime, Long endTime);
 }
