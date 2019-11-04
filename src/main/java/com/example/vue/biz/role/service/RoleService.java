@@ -1,8 +1,8 @@
 package com.example.vue.biz.role.service;
 
+import com.example.vue.biz.common.service.CommonService;
 import com.example.vue.common.constant.Result;
 import com.example.vue.biz.role.domain.Role;
-import com.example.vue.common.service.CommonService;
 
 import javax.servlet.http.HttpServletRequest;
 

@@ -41,6 +41,8 @@ public enum  ResultEnum {
 
     ROLE_USE_BY_USER(1000014, "该角色被用户使用，不能删除"),
 
+    UPLOAD_FILE_ERROR(1000015, "文件上传失败"),
+
 
     /** 操作成功返回数据 */
     SUCCESS(200, "Success");

@@ -28,4 +28,6 @@ public class KeyConstant {
     public static final Integer RESULT_SUCCESS = 0;
 
     public static final Integer RESULT_FAIL = 1;
+
+    public static final String FILE_PATH = "/tmp/demo-vue";
 }

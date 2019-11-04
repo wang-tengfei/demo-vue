@@ -1,4 +1,4 @@
-package com.example.vue.common.controller;
+package com.example.vue.biz.common.controller;
 
 import com.example.vue.common.constant.Result;
 import com.example.vue.common.constant.ResultEnum;
