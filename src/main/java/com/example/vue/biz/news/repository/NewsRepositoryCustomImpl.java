@@ -1,6 +1,7 @@
 package com.example.vue.biz.news.repository;
 
 import com.example.vue.biz.news.domain.News;
+import com.example.vue.common.constant.KeyConstant;
 import com.example.vue.common.constant.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +38,7 @@ public class NewsRepositoryCustomImpl implements NewsRepositoryCustom {
         if (startTime != null && endTime != null) {
             query.addCriteria(Criteria.where("c_time").gte(startTime).lte(endTime));
         }
+        query.addCriteria(Criteria.where("status").is(KeyConstant.STATUS_NORMAL));
 
         Page<News> page = new Page<>();
         long count = mongoTemplate.count(query, News.class);

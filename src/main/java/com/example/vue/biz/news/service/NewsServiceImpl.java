@@ -6,12 +6,14 @@ import com.example.vue.common.ResultUtil;
 import com.example.vue.common.constant.KeyConstant;
 import com.example.vue.common.constant.Page;
 import com.example.vue.common.constant.Result;
+import com.example.vue.common.constant.ResultEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -27,12 +29,48 @@ public class NewsServiceImpl implements NewsService {
     private NewsRepository newsRepository;
 
     @Override
-    public Result addNews(News news) {
-        news.setId(UUID.randomUUID().toString());
-        news.setStatus(KeyConstant.STATUS_NORMAL);
-        news.setCreateTime(System.currentTimeMillis());
-        News save = newsRepository.save(news);
+    public Result addNews(News newsInput) {
+        newsInput.setId(UUID.randomUUID().toString());
+        newsInput.setStatus(KeyConstant.STATUS_NORMAL);
+        newsInput.setCreateTime(System.currentTimeMillis());
+        News save = newsRepository.save(newsInput);
         return ResultUtil.success(save);
+    }
+
+    @Override
+    public Result editNews(String id, News newsInput) {
+        Optional<News> newsOptional = newsRepository.findById(id);
+        if (!newsOptional.isPresent()) {
+            return ResultUtil.error(ResultEnum.NOT_FOUND);
+        }
+        News newsDb = newsOptional.get();
+        newsDb.setNewsTitle(newsInput.getNewsTitle());
+        newsDb.setNewsContent(newsInput.getNewsContent());
+        newsDb.setType(newsInput.getType());
+        newsDb.setUpdateTime(System.currentTimeMillis());
+        News save = newsRepository.save(newsDb);
+        return ResultUtil.success(save);
+    }
+
+    @Override
+    public Result deleteNews(String id) {
+        Optional<News> newsOptional = newsRepository.findById(id);
+        if (!newsOptional.isPresent()) {
+            return ResultUtil.error(ResultEnum.NOT_FOUND);
+        }
+        News news = newsOptional.get();
+        news.setStatus(KeyConstant.STATUS_DELETE);
+        newsRepository.save(news);
+        return ResultUtil.success();
+    }
+
+    @Override
+    public Result getNewsById(String id) {
+        Optional<News> newsOptional = newsRepository.findById(id);
+        if (!newsOptional.isPresent()) {
+            return ResultUtil.error(ResultEnum.NOT_FOUND);
+        }
+        return ResultUtil.success(newsOptional.get());
     }
 
     @Override

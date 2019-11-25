@@ -17,12 +17,27 @@ public class NewsController {
     private NewsService newsService;
 
     @RequestMapping(value = "/news", method = RequestMethod.POST)
-    private Result addNews(@RequestBody News news) {
+    public Result addNews(@RequestBody News news) {
         return newsService.addNews(news);
     }
 
+    @RequestMapping(value = "/news/{id}", method = RequestMethod.PUT)
+    public Result editNews(@PathVariable("id")String id, @RequestBody News news) {
+        return newsService.editNews(id, news);
+    }
+
+    @RequestMapping(value = "/news/{id}", method = RequestMethod.DELETE)
+    public Result deleteNews(@PathVariable("id")String id) {
+        return newsService.deleteNews(id);
+    }
+
+    @RequestMapping(value = "/news/{id}", method = RequestMethod.GET)
+    public Result getNewsById(@PathVariable("id")String id) {
+        return newsService.deleteNews(id);
+    }
+
     @RequestMapping(value = "/news/page", method = RequestMethod.GET)
-    private Result getNewsWithPage(@RequestParam("page_index") Integer pageNum,
+    public Result getNewsWithPage(@RequestParam("page_index") Integer pageNum,
                                    @RequestParam("page_size") Integer pageSize,
                                    @RequestParam(value = "title", required = false) String title,
                                    @RequestParam(value = "type", required = false) Integer type,
