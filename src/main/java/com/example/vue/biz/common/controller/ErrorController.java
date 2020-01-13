@@ -3,6 +3,7 @@ package com.example.vue.biz.common.controller;
 import com.example.vue.common.constant.Result;
 import com.example.vue.common.constant.ResultEnum;
 import com.example.vue.common.ResultUtil;
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @modified by:
  */
 @RestController
+@Hidden
 @RequestMapping("/error")
 public class ErrorController {
 

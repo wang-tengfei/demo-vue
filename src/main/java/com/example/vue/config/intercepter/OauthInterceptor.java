@@ -25,19 +25,21 @@ public class OauthInterceptor implements HandlerInterceptor {
     @Autowired
     private OauthService oauthService;
 
-     @Override
-     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-         String token = request.getHeader("Authorization");
-         HandlerMethod handlerMethod = (HandlerMethod) handler;
-         Method method = handlerMethod.getMethod();
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        String token = request.getHeader("Authorization");
+        if (handler instanceof HandlerMethod) {
+            HandlerMethod handlerMethod = (HandlerMethod) handler;
+            Method method = handlerMethod.getMethod();
 
-         ValidToken tokenClass = handlerMethod.getBeanType().getAnnotation(ValidToken.class);
-         ValidToken tokenMethod = method.getAnnotation(ValidToken.class);
-         if (tokenClass == null || tokenClass.request()) {
-             if (tokenMethod == null || tokenMethod.request()) {
-                 return oauthService.verifyToken(token, request);
-             }
-         }
-         return true;
+            ValidToken tokenClass = handlerMethod.getBeanType().getAnnotation(ValidToken.class);
+            ValidToken tokenMethod = method.getAnnotation(ValidToken.class);
+            boolean methodMatch = tokenMethod != null && tokenMethod.request();
+            boolean classMatch = tokenClass != null && tokenClass.request() && tokenMethod != null && !tokenMethod.request();
+            if (methodMatch || classMatch) {
+                return oauthService.verifyToken(token, request);
+            }
+        }
+        return true;
     }
 }
