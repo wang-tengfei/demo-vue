@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import sun.misc.BASE64Decoder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -101,9 +100,11 @@ public class OauthServiceImpl implements OauthService {
 
         String[] split = token.split("\\.");
         String claimEncoder = split[1];
-        BASE64Decoder decoder = new BASE64Decoder();
+//        BASE64Decoder decoder = new BASE64Decoder();
+        Base64.Decoder decoder = Base64.getMimeDecoder();
         try {
-            byte[] bytes = decoder.decodeBuffer(claimEncoder);
+//            byte[] bytes = decoder.decodeBuffer(claimEncoder);
+            byte[] bytes = decoder.decode(claimEncoder);
             String claimDecoder = new String(bytes, StandardCharsets.UTF_8);
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(claimDecoder);
@@ -203,8 +204,9 @@ public class OauthServiceImpl implements OauthService {
     public static void main(String[] args) throws IOException {
         String s = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIwOTAyMzExNzdjNTk1OTI4MTQyMGEyY2FmMjI0MmI2MjQ1NjIyNjU2ZTBiY2Y4NTNhMmU3ZmQ4YzdiN2UyYzc4ODhlYWY0Y2ViMDBjOWJlMyIsInN1YiI6InVzZXIgdG9rZW4iLCJpc3MiOiJTZXJ2aWNlIiwiZXhwIjoxNTYxNDM1Nzc1LCJpYXQiOjE1NjE0Mjg1NzV9.Z3FJofcH16CVyXtXzEFg4Gjn634Puni37CQMqkJV6uM";
         String[] split = s.split("\\.");
-        BASE64Decoder decoder = new BASE64Decoder();
-        byte[] bytes = decoder.decodeBuffer(split[1]);
+//        BASE64Decoder decoder = new BASE64Decoder();
+        Base64.Decoder decoder = Base64.getMimeDecoder();
+        byte[] bytes = decoder.decode(split[1]);
         String claimDecoder = new String(bytes, StandardCharsets.UTF_8);
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(claimDecoder);
