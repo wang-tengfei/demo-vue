@@ -7,14 +7,18 @@ import com.example.vue.biz.oauth.repository.UserEntity;
 import com.example.vue.biz.oauth.service.OauthService;
 import com.example.vue.biz.user.modle.UserInfo;
 import com.example.vue.biz.user.repository.UserInfoRepository;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.util.concurrent.ListenableFuture;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -57,10 +61,19 @@ public class UserServiceImpl implements UserService {
         return ResultUtil.success(save);
     }
 
+    @SneakyThrows
     @Override
     public Result getAllUsers() {
+        ListenableFuture<List<UserInfo>> users = getUsers();
+        List<UserInfo> userInfos = users.get();
+        return ResultUtil.success(userInfos);
+    }
+
+    @Async("customTaskExecutor")
+    public ListenableFuture<List<UserInfo>> getUsers() {
         List<UserInfo> users = userInfoRepository.getAllUsers();
-        return ResultUtil.success(users);
+        System.out.println(users);
+        return new AsyncResult<>(users);
     }
 
     @Override

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 /**
  * @author: Tengfei Wang
- * @description:
+ * @description: 定时任务配置
  * @date: Created in 10:24 2019-07-18
  * @modified by:
  */

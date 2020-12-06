@@ -1,10 +1,10 @@
 FROM openjdk:8-jdk-alpine
 
-ADD target/*.jar app.jar
+ADD ./target/*.jar app.jar
 
-ADD ./startup.sh /
+#ADD ./startup.sh /
 
-EXPOSE 8080
+EXPOSE 8080 8788
 
-#ENTRYPOINT ["java", "-Djava.security.edg=file:/dev/./urandom", "-Xdebug", "-Xrunjdwp:transport=dt_socket,address=5005,server=y,suspend=n", "-jar", "app.jar"]
-ENTRYPOINT ["./startup.sh"]
+ENTRYPOINT ["java", "-Djava.security.edg=file:/dev/./urandom", "-Xdebug", "-Xrunjdwp:transport=dt_socket,address=5005,server=y,suspend=n", "-jar", "app.jar"]
+#ENTRYPOINT ["./startup.sh"]

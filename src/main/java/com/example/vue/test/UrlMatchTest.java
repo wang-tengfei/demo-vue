@@ -5,7 +5,7 @@ import org.springframework.util.PathMatcher;
 
 /**
  * @Author: Tengfei.Wang
- * @Description;
+ * @Description; 匹配URL是否类型， 相同
  * @Date: 7/5/2020
  * @Modified by:
  */

@@ -45,7 +45,7 @@ public class JaegerTest {
 //        template.setInterceptors(Collections.singletonList(new TracingRestTemplateInterceptor(tracer)));
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(httpHeaders);
-        ResponseEntity<Map> exchange = template.exchange("http://localhost:8089/tracer", HttpMethod.GET, entity, Map.class);
+        ResponseEntity<Map> exchange = template.exchange("http://localhost:8084/api/app/fetchAll?status=1,2,3,4,5,6,9,10&page=1&pageSize=99", HttpMethod.GET, entity, Map.class);
         Map<String, String> body = exchange.getBody();
 
         JaegerSpanContext spanContext = tracer.extract(Format.Builtin.TEXT_MAP, new TextMapAdapter(body));

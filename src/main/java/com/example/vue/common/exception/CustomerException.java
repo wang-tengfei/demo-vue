@@ -26,6 +26,10 @@ public class CustomerException extends Exception {
         this(resultEnum.getCode(), resultEnum.getMsg());
     }
 
+    public CustomerException(ResultEnum resultEnum, String msg) {
+        this(resultEnum.getCode(), msg);
+    }
+
     public CustomerException(String message) {
         this(-1, message);
     }

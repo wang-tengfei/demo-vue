@@ -13,7 +13,7 @@ public class ThreadFactoryCustom implements ThreadFactory {
 
     private final AtomicInteger threadNumber = new AtomicInteger(1);
 
-    private String namePrefix;
+    private final String namePrefix;
 
     public ThreadFactoryCustom(String namePrefix) {
         this.namePrefix = namePrefix;

@@ -2,39 +2,32 @@ version: '3.3'
 
 services:
   demo-vue:
-    image: demo:v1.0
+    image: demo-vue:lts
     ports:
-      - 8000:8080
-      - 5005:5005
+      - 8788:8080
+      - 6005:5005
     container_name: demo-vue
     volumes:
       - ./web-variables.env:/web-variables.env
     env_file:
       - web-variables.env
     extra_hosts:
-      - "mongo.tengfei.com:172.17.0.1"
-      - "jaeger-agent.nexusguard.asia:10.6.5.225"
-  demo-vue-2:
-    build: ./
-    image: demo:v2.0
-    ports:
-      - 8001:8080
-      - 5006:5005
-    container_name: demo-vue-2
-    volumes:
-      - ./web-variables.env:/web-variables.env
-      - ./startup.sh:/startup.sh
-    env_file:
-      - web-variables.env
-    extra_hosts:
-      - "mongo.tengfei.com:172.17.0.1"
+      - "site.mongo.com:172.17.0.1"
+      - "site.mysql.com:172.17.0.1"
+      - "site.redis.com:172.17.0.1"
       - "jaeger-agent.nexusguard.asia:10.6.5.225"
     entrypoint:
-      - "/startup.sh"
-      - "-RUNTIME_ENV"
-      - "dev"
-      - "-SERVER_PORT"
-      - "8088"
-      - "-jaeger_host"
-      - "http://www.baidus.com"
+      - java
+      - -Djava.security.edg=file:/dev/./urandom
+      - -jar
+      - /app.jar
+      - --spring.profiles.active=dev
+#  site-cp:
+#    image: site-cp:lts
+#    ports:
+#    - 8001:80
+#    container_name: site-cp
+#    extra_hosts:
+#      - "demo-vue.site.net:172.17.0.1"
+
 

@@ -13,11 +13,11 @@ import lombok.ToString;
 @Data
 @ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Result<T> {
+public class Result {
 
     private Integer code;
 
     private String msg;
 
-    private T result;
+    private Object result;
 }
